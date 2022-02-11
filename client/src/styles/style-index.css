@@ -1,0 +1,156 @@
+@import url("./general-style.css");
+@import url("./style-404.css");
+@import url("./style-auth.css");
+
+.card-rates {
+  background-color: var(--color-grey-background);
+}
+
+.icon-up i {
+  color: var(--color-green);
+}
+.icon-down i {
+  color: var(--color-red);
+}
+.icon-exchange i {
+  color: var(--color-yellow);
+}
+
+.icon-up,
+.icon-down {
+  margin-left: 5px;
+  margin-top: 6px;
+}
+
+.subtitle {
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--color-grey-titles);
+  align-self: center;
+}
+
+.text-large {
+  font-size: 24px;
+  color: var(--color-grey-body);
+}
+
+.navbar {
+  border: 1px solid var(--color-grey-border);
+  padding: 0 24px;
+}
+.navbar-brand:hover {
+  cursor: pointer;
+}
+.container-fluid {
+  margin: 0;
+}
+.cards-container {
+  display: grid;
+  grid-gap: 2em;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+.card {
+  padding: 10px 0;
+  height: 100%;
+  -webkit-box-shadow: 3px 3px 16px 1px rgb(45 50 72 / 20%);
+  box-shadow: 3px 3px 16px 1px rgb(45 50 72 / 20%);
+}
+.card-currency {
+  padding-bottom: 3px;
+}
+.card-currency p {
+  margin: 0;
+}
+.card-currency--border {
+  border-bottom: 1px solid var(--color-grey-border);
+}
+
+.btn-close {
+  font-size: 9px;
+  font-weight: bold;
+  -webkit-text-stroke: 2px var(--color-grey-titles);
+}
+
+.card-rates .rate {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  margin: 0;
+  padding: 3px 0;
+}
+.card-rates .rate p {
+  margin-bottom: 0;
+}
+
+.icon-exchange {
+  margin-left: 5px;
+  font-size: 12px;
+}
+.btn-success,
+.btn-primary {
+  width: 100px;
+}
+.icon-plus {
+  width: 100%;
+  height: 100%;
+  font-size: 5em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.card-input--center {
+  padding-top: 20px;
+}
+
+.input-group-text {
+  background-color: transparent;
+  border: none;
+  min-width: 101px;
+}
+
+.btn-add {
+  width: 100%;
+  height: 100%;
+  font-size: 52px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-color: var(--color-grey-border);
+  color: var(--color-grey-titles);
+}
+
+.btn-add:hover {
+  border-color: var(--color-grey-border);
+}
+
+.blotter-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+.table thead {
+  background-color: var(--color-blue);
+  color: var(--color-white);
+}
+
+.table > :not(:first-child) {
+  border-top: none;
+}
+
+.card--add {
+  padding: 0px;
+  border: 0px;
+  height: 260px;
+}
+
+.fa-plus {
+  color: var(--color-grey-border);
+  font-size: 150px;
+}
+
+.fas.fa-sort:hover {
+  cursor: pointer;
+}
+.fas.fa-exchange-alt:hover {
+  cursor: pointer;
+}

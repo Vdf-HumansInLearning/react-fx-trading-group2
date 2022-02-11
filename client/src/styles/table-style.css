@@ -1,0 +1,12 @@
+.table-responsive {
+ 
+  display: block;
+  height: 680px;
+  overflow-y: scroll;
+}
+
+thead tr:first-child>th {
+  position: sticky;
+  background: var(--color-blue);
+  top: 0;
+}

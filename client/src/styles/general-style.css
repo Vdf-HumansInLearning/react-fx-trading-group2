@@ -1,0 +1,79 @@
+@import url("./toast-style.css");
+@import url("./spinner-style.css");
+@import url("./table-style.css");
+
+:root {
+  --color-grey-background: #f2f2f2;
+  --color-grey-border: #dddddd;
+  --color-grey-titles: #7c7c7c;
+  --color-grey-body: #373a3c;
+  --color-blue: #3496f0;
+  --color-yellow: #f0ad4e;
+  --color-green: #75d8a6;
+  --color-red: #d9534f;
+  --color-white: #ffffff;
+  --font-openSans: "Open Sans";
+}
+
+body {
+  color: var(--color-grey-body);
+  font-family: var(--font-openSans), sans-serif;
+}
+
+p {
+  font-size: 16px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--color-grey-titles);
+  font-weight: 700;
+  font-size: 24px;
+}
+
+.btn-primary {
+  background-color: var(--color-blue);
+  border: none;
+}
+
+.btn-success {
+  background-color: var(--color-green);
+  border: none;
+}
+
+.color-titles {
+  color: var(--color-grey-titles);
+  font-weight: 700;
+  margin: 25px 0;
+}
+
+.vertical-line {
+  width: 2px;
+  background-color: var(--color-grey-border);
+  height: 30px;
+  margin: 0 10px;
+  align-self: center;
+  margin-bottom: 1rem;
+}
+
+hr {
+  background-color: var(--color-grey-titles);
+  margin: 20px 0;
+  width: 100%;
+}
+
+.link-primary:hover {
+  cursor: pointer;
+}
+
+
+.thanks {
+  font-size: 50px;
+  font-weight: bolder;
+  margin-bottom: 30px;
+  color: var(--color-white)
+}
