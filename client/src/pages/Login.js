@@ -19,8 +19,7 @@ const Login = () => {
                 name="email"
                 className="form-control"
                 aria-describedby="emailHelp"
-                placeholder="Email"
-                defaultValue="test@fxtrading.com"
+                placeholder="email@fxtrading.com"
               />
             </div>
             <div className="mb-3 d-flex align-content-center">
@@ -31,8 +30,7 @@ const Login = () => {
                 type="password"
                 name="password"
                 className="form-control"
-                placeholder="Password"
-                defaultValue="Test123!"
+                placeholder="Password123!"
               />
             </div>
             <BtnsLoginRegister textContent={"Login"} />

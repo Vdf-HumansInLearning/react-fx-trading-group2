@@ -20,7 +20,6 @@ const Register = () => {
                 name="user"
                 aria-describedby="emailHelp"
                 placeholder="Username"
-                defaultValue="username"
               />
             </div>
             <div className="mb-3 align-content-center">
@@ -30,8 +29,7 @@ const Register = () => {
                 id="inputEmail"
                 type="email"
                 name="email"
-                placeholder="Email"
-                defaultValue="email@email.com"
+                placeholder="email@fxtrading.com"
               />
             </div>
             <div className="mb-3 align-content-center">
@@ -41,8 +39,7 @@ const Register = () => {
                 id="inputPassword"
                 type="password"
                 name="password"
-                placeholder="Password"
-                defaultValue="Test123!"
+                placeholder="Password123!"
               />
             </div>
             <div className="mb-3 align-content-center">
@@ -52,8 +49,7 @@ const Register = () => {
                 id="inputPasswordConfirm"
                 type="password"
                 name="co-password"
-                placeholder="Confirm Password"
-                defaultValue="Test123!"
+                placeholder="Password123!"
               />
             </div>
             <BtnsLoginRegister textContent={"Register"} />
