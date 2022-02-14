@@ -3,7 +3,7 @@ import useFetch from "./UseFetch";
 import '../styles/style-index.css'
 
 function Table() {
-    const { data: transactions, error, isPending } = useFetch(`http://localhost:8080/transactions`);
+    const { data: transactions, error, isPending } = useFetch(`http://localhost:8080/api/transactions`);
 
     return (
         <section className="col-sm-12 col-md-12 col-lg-6">
