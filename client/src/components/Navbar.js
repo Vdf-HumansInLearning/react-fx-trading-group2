@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 function Navbar() {
   return (
@@ -12,9 +13,15 @@ function Navbar() {
             height="100%"
           />
         </a>
-        <a className="btn btn-outline-secondary" role="button" id="logoutBtn">
-          Logout
-        </a>
+        <Link to="/login">
+          <button
+            className="btn btn-outline-secondary"
+            role="button"
+            id="logoutBtn"
+          >
+            Logout
+          </button>
+        </Link>
       </nav>
     </>
   );
