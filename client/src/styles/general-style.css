@@ -33,6 +33,7 @@ h6 {
   color: var(--color-grey-titles);
   font-weight: 700;
   font-size: 24px;
+  text-align: left;
 }
 
 .btn-primary {
