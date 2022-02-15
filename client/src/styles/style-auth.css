@@ -91,6 +91,9 @@ p a {
 .error {
   color: var(--color-red);
 }
+form p{
+  text-align: left;
+}
 
 @media (max-width: 990px) {
   .aside {

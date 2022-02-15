@@ -1,6 +1,7 @@
 import React from "react";
 import Aside from "../components/Aside";
 import BtnsLoginRegister from "../components/BtnsLoginRegister";
+import "../styles/style-auth.css";
 
 const Login = () => {
   return (
@@ -20,6 +21,7 @@ const Login = () => {
                 className="form-control"
                 aria-describedby="emailHelp"
                 placeholder="email@fxtrading.com"
+                required
               />
             </div>
             <div className="mb-3 d-flex align-content-center">
@@ -31,11 +33,17 @@ const Login = () => {
                 name="password"
                 className="form-control"
                 placeholder="Password123!"
+                required
               />
             </div>
             <BtnsLoginRegister textContent={"Login"} />
           </form>
         </div>
+        <img
+          className="mobile__image"
+          src="https://raw.githubusercontent.com/WebToLearn/fx-trading-app/master/App/ui/src/assets/img/logo-main.svg"
+          alt="logo"
+        ></img>
       </main>
     </div>
   );

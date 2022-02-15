@@ -1,6 +1,7 @@
 import React from "react";
 import Aside from "../components/Aside";
 import BtnsLoginRegister from "../components/BtnsLoginRegister";
+import "../styles/style-auth.css";
 
 const Register = () => {
   return (
@@ -20,6 +21,7 @@ const Register = () => {
                 name="user"
                 aria-describedby="emailHelp"
                 placeholder="Username"
+                required
               />
             </div>
             <div className="mb-3 align-content-center">
@@ -29,6 +31,7 @@ const Register = () => {
                 id="inputEmail"
                 type="email"
                 name="email"
+                required
                 placeholder="email@fxtrading.com"
               />
             </div>
@@ -38,6 +41,7 @@ const Register = () => {
                 className="form-control"
                 id="inputPassword"
                 type="password"
+                required
                 name="password"
                 placeholder="Password123!"
               />
@@ -48,6 +52,7 @@ const Register = () => {
                 className="form-control"
                 id="inputPasswordConfirm"
                 type="password"
+                required
                 name="co-password"
                 placeholder="Password123!"
               />
@@ -55,6 +60,11 @@ const Register = () => {
             <BtnsLoginRegister textContent={"Register"} />
           </form>
         </div>
+        <img
+          className="mobile__image register__logo"
+          src="https://raw.githubusercontent.com/WebToLearn/fx-trading-app/master/App/ui/src/assets/img/logo-main.svg"
+          alt="logo"
+        ></img>
       </div>
     </div>
   );

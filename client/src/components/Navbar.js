@@ -16,7 +16,6 @@ function Navbar() {
         <Link to="/login">
           <button
             className="btn btn-outline-secondary"
-            role="button"
             id="logoutBtn"
           >
             Logout
