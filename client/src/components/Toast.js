@@ -2,7 +2,7 @@ import React from "react";
 import "../styles/toast-style.css";
 
 const Toast = ({ isShown, toastTitle, toastMessage, toastType }) => {
-  if (isShown == true) {
+  if (isShown === true) {
     return (
       <>
         {toastType === "success" ? (
