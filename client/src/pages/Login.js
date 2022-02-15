@@ -16,6 +16,18 @@ const Login = () => {
     toastType: "success",
   });
 
+  const createCookie = (name, value, days) => {
+    var date, expires;
+    if (days) {
+      date = new Date();
+      date.setDate(date.getDate() + days);
+      expires = "; expires=" + date.toUTCString();
+    } else {
+      expires = "";
+    }
+    document.cookie = name + "=" + value + expires;
+  }
+
   const handleLogin = (e) => {
     e.preventDefault();
     let url = "http://localhost:8080/api/auth/login";
@@ -33,7 +45,9 @@ const Login = () => {
         }))
       )
       .then((response) => {
+        let username = response.body.username;
         if (response.status === 200) {
+          createCookie("username", username, 2)
           setToast({
             isShown: true,
             toastTitle: "Login successful",
