@@ -1,7 +1,6 @@
 import React from "react";
-import { Link } from "react-router-dom";
 
-function Navbar() {
+function Navbar({ clearCookiesOnLogout }) {
   return (
     <>
       <nav className="navbar navbar-light bg-light mb-3">
@@ -13,14 +12,13 @@ function Navbar() {
             height="100%"
           />
         </a>
-        <Link to="/login">
-          <button
-            className="btn btn-outline-secondary"
-            id="logoutBtn"
-          >
-            Logout
-          </button>
-        </Link>
+        <button
+          className="btn btn-outline-secondary"
+          id="logoutBtn"
+          onClick={() => clearCookiesOnLogout('username')}
+        >
+          Logout
+        </button>
       </nav>
     </>
   );
