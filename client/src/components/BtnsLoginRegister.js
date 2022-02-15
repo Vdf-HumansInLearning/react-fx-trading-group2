@@ -1,14 +1,20 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const BtnsLoginRegister = ({ handleLogin, textContent }) => {
+const BtnsLoginRegister = ({ textContent, handleLogin, handleRegister }) => {
   return (
     <>
       <button
         id={textContent === "Login" ? "loginBtn" : "submitBtn"}
         type="submit"
         className="main__btn"
-        onClick={textContent === "Login" ? handleLogin : null}
+        onClick={
+          textContent === "Login"
+            ? handleLogin
+            : textContent === "Register"
+            ? handleRegister
+            : null
+        }
       >
         {textContent}
       </button>

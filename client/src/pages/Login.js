@@ -51,7 +51,7 @@ const Login = () => {
           setToast({
             isShown: true,
             toastTitle: "Login successful",
-            toastMessage: "You have been logged in!",
+            toastMessage: "You'll be logged in!",
             toastType: "success",
           });
           setTimeout(() => {
