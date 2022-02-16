@@ -7,7 +7,8 @@ import CurrenciesPairs from "./CurrenciesPairs";
 
 function Table() {
     const { data: transactions, error, isPending } = useFetch(`http://localhost:8080/api/transactions`);
-    const { data: currencies } = useFetch(`http://localhost:8080/api/currencies/pairs`)
+    const { data: currencies } = useFetch(`http://localhost:8080/api/currencies/pairs`);
+
     return (
         <section className="col-sm-12 col-md-12 col-lg-6">
             <h5 className="color-titles">Blotter View</h5>

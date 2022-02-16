@@ -1,9 +1,13 @@
 import React from "react";
+import useFetch from "./UseFetch";
 import "../styles/style-index.css";
 
-const PickCurrency = () => {
+const WidgetPickCurrency = ({ cardIdCounter }) => {
+
+  const { data: currenciesAvailable } = useFetch('http://localhost:8080/api/currencies');
+
   return (
-    <>
+    <div className="col" id={`pickCard${cardIdCounter}`}>
       <div className="card">
         <div className="card-currency--border px-3 d-flex justify-content-between">
           <div className="d-flex align-items-center">
@@ -17,29 +21,25 @@ const PickCurrency = () => {
         </div>
         <div className="card-input--center mt-3 px-3">
           <div className="input-group mb-3">
-            <label className="input-group-text" for="inputMainCurrency">
+            <label className="input-group-text" htmlFor="inputMainCurrency">
               Primary
             </label>
             <select className="form-select" id="inputMainCurrency">
               <option value="opt_none">Choose...</option>
-              <option value="USD">USD</option>
-              <option value="EUR">EUR</option>
-              <option value="GBP">GBP</option>
-              <option value="RON">RON</option>
-              <option value="CHF">CHF</option>
+              {currenciesAvailable && currenciesAvailable.map((i) => (
+                <option value={i} id={i} key={i}>{i}</option>
+              ))}
             </select>
           </div>
           <div className="input-group mb-3">
-            <label className="input-group-text" for="inputSecondCurrency">
+            <label className="input-group-text" htmlFor="inputSecondCurrency">
               Secondary
             </label>
             <select className="form-select" id="inputSecondCurrency">
               <option value="opt_none">Choose...</option>
-              <option value="USD">USD</option>
-              <option value="EUR">EUR</option>
-              <option value="GBP">GBP</option>
-              <option value="RON">RON</option>
-              <option value="CHF">CHF</option>
+              {currenciesAvailable && currenciesAvailable.map((i) => (
+                <option value={i} id={i} key={i}>{i}</option>
+              ))}
             </select>
           </div>
         </div>
@@ -49,8 +49,8 @@ const PickCurrency = () => {
           </button>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
-export default PickCurrency;
+export default WidgetPickCurrency;

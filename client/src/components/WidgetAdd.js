@@ -1,13 +1,15 @@
 import React from 'react';
 import '../styles/style-index.css'
 
-function WidgetAdd() {
+function WidgetAdd({ addPickWidget }) {
 
     return (
-        <div className="card--add p-0 border-0">
-            <button className="btn btn-light btn-add">
-                <i className="fas fa-plus"></i>
-            </button>
+        <div className='col'>
+            <div className="card--add p-0 border-0">
+                <button className="btn btn-light btn-add" onClick={addPickWidget}>
+                    <i className="fas fa-plus"></i>
+                </button>
+            </div>
         </div>
     )
 }

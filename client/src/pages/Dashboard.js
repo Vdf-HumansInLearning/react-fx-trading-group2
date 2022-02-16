@@ -8,6 +8,7 @@ import Toast from "../components/Toast";
 import '../styles/style-index.css'
 
 function Dashboard() {
+
   const navigate = useNavigate();
   const [toast, setToast] = useState({
     isShown: false,
@@ -15,6 +16,7 @@ function Dashboard() {
     toastMessage: "",
     toastType: "success",
   });
+
   const clearCookiesOnLogout = (name) => {
     document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:01 GMT;";
     setToast({
@@ -27,6 +29,7 @@ function Dashboard() {
       navigate("/login");
     }, 3000);
   }
+
   return (
     <>
       <Toast

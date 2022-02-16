@@ -3,7 +3,7 @@ import "../styles/style-index.css";
 
 const WidgetMain = () => {
   return (
-    <>
+    <div className="col">
       <div className="card">
         <div className="card-currency px-3 d-flex justify-content-between">
           <div className="d-flex align-items-center">
@@ -60,7 +60,7 @@ const WidgetMain = () => {
             ></input>
           </div>
           <div className="input-group mb-3">
-            <label className="input-group-text" for="inputCcy1">
+            <label className="input-group-text" htmlFor="inputCcy1">
               Tenor
             </label>
             <select className="form-select" id="inputCcy1">
@@ -82,7 +82,7 @@ const WidgetMain = () => {
           </button>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

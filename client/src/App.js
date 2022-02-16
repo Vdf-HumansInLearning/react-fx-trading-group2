@@ -6,14 +6,14 @@ import Register from "./pages/Register";
 import NotFound from "./pages/NotFound";
 
 function App() {
+
   return (
     <div className="App">
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/not-found" element={<NotFound />} />
-        <Route path="*" element={<Navigate replace to="/not-found" />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </div>
   );
