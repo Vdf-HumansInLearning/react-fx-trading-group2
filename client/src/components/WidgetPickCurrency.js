@@ -2,7 +2,7 @@ import React from "react";
 import useFetch from "./UseFetch";
 import "../styles/style-index.css";
 
-const WidgetPickCurrency = ({ cardIdCounter, closeWidget }) => {
+const WidgetPickCurrency = ({ cardIdCounter, closeWidget, selectCurrency }) => {
   const { data: currenciesAvailable } = useFetch(
     "http://localhost:8080/api/currencies"
   );
@@ -40,7 +40,11 @@ const WidgetPickCurrency = ({ cardIdCounter, closeWidget }) => {
             <label className="input-group-text" htmlFor="inputSecondCurrency">
               Secondary
             </label>
-            <select className="form-select" id="inputSecondCurrency">
+            <select
+              className="form-select"
+              id="inputSecondCurrency"
+              onChange={() => selectCurrency(`pickCard${cardIdCounter}`)}
+            >
               <option value="opt_none">Choose...</option>
               {currenciesAvailable &&
                 currenciesAvailable.map((i) => (
@@ -52,7 +56,11 @@ const WidgetPickCurrency = ({ cardIdCounter, closeWidget }) => {
           </div>
         </div>
         <div className="card-actions px-3 d-flex justify-content-end">
-          <button className="btn btn-primary" type="button">
+          <button
+            className="btn btn-primary"
+            type="button"
+            id="btn_confirm_selection"
+          >
             Ok
           </button>
         </div>

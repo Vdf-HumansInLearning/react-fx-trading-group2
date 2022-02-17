@@ -25,6 +25,7 @@ function RatesView() {
           cardIdCounter={cardId}
           key={cardId}
           closeWidget={closeWidget}
+          selectCurrency={selectCurrency}
         />,
       ]);
       setPick(pick + 1);
@@ -49,7 +50,32 @@ function RatesView() {
     }
   }
 
-  function deleteWidget(cardId) {}
+  function selectCurrency(cardId) {
+    let card = document.getElementById(cardId);
+    let inputMainCurrency = card.querySelector("#inputMainCurrency");
+    let inputSecondCurrency = card.querySelector("#inputSecondCurrency");
+    let btn_confirm_selection = card.querySelector("#btn_confirm_selection");
+    btn_confirm_selection.disabled = false;
+    if (inputMainCurrency && inputSecondCurrency)
+      if (
+        inputMainCurrency.value !== "opt_none" ||
+        inputSecondCurrency.value !== "opt_none"
+      ) {
+        //user must choose two different currencies
+        if (inputMainCurrency.value == inputSecondCurrency.value) {
+          setToast({
+            isShown: true,
+            toastTitle: "Error",
+            toastMessage: "You must choose two different currencies.",
+            toastType: "fail",
+          });
+          btn_confirm_selection.disabled = true;
+          setTimeout(() => {
+            setToast({ isShown: false });
+          }, 2000);
+        }
+      }
+  }
 
   return (
     <section className="col-sm-12 col-md-12 col-lg-6">
