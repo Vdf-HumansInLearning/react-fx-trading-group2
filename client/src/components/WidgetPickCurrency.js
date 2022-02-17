@@ -2,9 +2,10 @@ import React from "react";
 import useFetch from "./UseFetch";
 import "../styles/style-index.css";
 
-const WidgetPickCurrency = ({ cardIdCounter }) => {
-
-  const { data: currenciesAvailable } = useFetch('http://localhost:8080/api/currencies');
+const WidgetPickCurrency = ({ cardIdCounter, closeWidget }) => {
+  const { data: currenciesAvailable } = useFetch(
+    "http://localhost:8080/api/currencies"
+  );
 
   return (
     <div className="col" id={`pickCard${cardIdCounter}`}>
@@ -17,6 +18,7 @@ const WidgetPickCurrency = ({ cardIdCounter }) => {
             className="btn-close"
             type="button"
             aria-label="Close"
+            onClick={() => closeWidget(`pickCard${cardIdCounter}`)}
           ></button>
         </div>
         <div className="card-input--center mt-3 px-3">
@@ -26,9 +28,12 @@ const WidgetPickCurrency = ({ cardIdCounter }) => {
             </label>
             <select className="form-select" id="inputMainCurrency">
               <option value="opt_none">Choose...</option>
-              {currenciesAvailable && currenciesAvailable.map((i) => (
-                <option value={i} id={i} key={i}>{i}</option>
-              ))}
+              {currenciesAvailable &&
+                currenciesAvailable.map((i) => (
+                  <option value={i} id={i} key={i}>
+                    {i}
+                  </option>
+                ))}
             </select>
           </div>
           <div className="input-group mb-3">
@@ -37,9 +42,12 @@ const WidgetPickCurrency = ({ cardIdCounter }) => {
             </label>
             <select className="form-select" id="inputSecondCurrency">
               <option value="opt_none">Choose...</option>
-              {currenciesAvailable && currenciesAvailable.map((i) => (
-                <option value={i} id={i} key={i}>{i}</option>
-              ))}
+              {currenciesAvailable &&
+                currenciesAvailable.map((i) => (
+                  <option value={i} id={i} key={i}>
+                    {i}
+                  </option>
+                ))}
             </select>
           </div>
         </div>
