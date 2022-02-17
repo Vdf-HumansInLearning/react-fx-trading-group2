@@ -2,7 +2,12 @@ import React from "react";
 import useFetch from "./UseFetch";
 import "../styles/style-index.css";
 
-const WidgetPickCurrency = ({ cardIdCounter, closeWidget, selectCurrency }) => {
+const WidgetPickCurrency = ({
+  cardIdCounter,
+  closeWidget,
+  selectCurrency,
+  confirmSelectionCurrency,
+}) => {
   const { data: currenciesAvailable } = useFetch(
     "http://localhost:8080/api/currencies"
   );
@@ -27,10 +32,10 @@ const WidgetPickCurrency = ({ cardIdCounter, closeWidget, selectCurrency }) => {
               Primary
             </label>
             <select className="form-select" id="inputMainCurrency">
-              <option value="opt_none">Choose...</option>
+              <option defaultValue="opt_none">Choose...</option>
               {currenciesAvailable &&
                 currenciesAvailable.map((i) => (
-                  <option value={i} id={i} key={i}>
+                  <option defaultValue={i} id={i} key={i}>
                     {i}
                   </option>
                 ))}
@@ -45,10 +50,10 @@ const WidgetPickCurrency = ({ cardIdCounter, closeWidget, selectCurrency }) => {
               id="inputSecondCurrency"
               onChange={() => selectCurrency(`pickCard${cardIdCounter}`)}
             >
-              <option value="opt_none">Choose...</option>
+              <option defaultValue="opt_none">Choose...</option>
               {currenciesAvailable &&
                 currenciesAvailable.map((i) => (
-                  <option value={i} id={i} key={i}>
+                  <option defaultValue={i} id={i} key={i}>
                     {i}
                   </option>
                 ))}
@@ -60,6 +65,7 @@ const WidgetPickCurrency = ({ cardIdCounter, closeWidget, selectCurrency }) => {
             className="btn btn-primary"
             type="button"
             id="btn_confirm_selection"
+            onClick={() => confirmSelectionCurrency(cardIdCounter)}
           >
             Ok
           </button>
