@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from 'react';
 import WidgetAdd from "./WidgetAdd";
 import "../styles/style-index.css";
 import WidgetPickCurrency from "./WidgetPickCurrency";
 import Toast from "./Toast";
 import WidgetMain from "./WidgetMain";
+
 
 function RatesView() {
   const [toast, setToast] = useState({
@@ -14,8 +15,6 @@ function RatesView() {
   });
 
   const [cards, setCards] = useState([]);
-  const [main, setMain] = useState(0);
-  const [pick, setPick] = useState(0);
   const [cardId, setCardId] = useState(0);
 
   const [item, setItem] = useState({
@@ -26,7 +25,7 @@ function RatesView() {
   });
 
   const addPickWidget = () => {
-    if (pick + main <= 4) {
+    if (cards.length <= 4) {
       setCards([
         ...cards,
         <WidgetPickCurrency
@@ -37,7 +36,6 @@ function RatesView() {
           confirmSelectionCurrency={confirmSelectionCurrency}
         />,
       ]);
-      setPick(pick + 1);
       setCardId(cardId + 1);
     } else {
       setTimeout(() => {
@@ -53,11 +51,17 @@ function RatesView() {
 
   function closeWidget(cardId) {
     if (cardId.startsWith("pickCard")) {
-      document.getElementById(cardId).remove();
-      setPick(pick - 1);
+      let id = cardId.substring(8);
+
+      setCards(
+        cards.filter((i) => (i.props.cardId) !== id)
+      )
+      console.log(cards)
     } else if (cardId.startsWith("card")) {
-      document.getElementById(cardId).remove();
-      setMain(main - 1);
+      let id = cardId.substring(4);
+      setCards([...
+        cards.filter((i) => (i.key) !== id)
+      ])
       //stop(cardId);
     }
   }
@@ -129,7 +133,6 @@ function RatesView() {
             if (response.status === 200) {
               //inputId++;
               //populate the item
-              console.log("asdasdas");
               setItem({
                 mainCurrency: currencyObj.base_currency,
                 secondCurrency: currencyObj.quote_currency,
@@ -173,7 +176,7 @@ function RatesView() {
 
   function addNewWidget(cardId) {
     //no more that 5 cards
-    if (pick + main <= 5) {
+    if (cards.length <= 4) {
       //const newWidget = createMainWidget(item);
       setCards([
         ...cards,
@@ -184,7 +187,6 @@ function RatesView() {
           item={item}
         />,
       ]);
-      setMain(main + 1);
       setCardId(cardId + 1);
       //   cardsRow.prepend(newWidget);
       //   let currentInputId = `swapp${inputId}`;

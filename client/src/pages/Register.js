@@ -131,12 +131,12 @@ const Register = () => {
             }, 2000);
           } else if (data.status === 409) {
             if (data.body.existing === "username") {
-              setToast({ isShown: true, toastMessage: data.body.message });
+              setToast({ isShown: true, toastTitle: 'Error', toastMessage: data.body.message, toastType: 'fail' });
               setTimeout(() => {
                 setToast({ isShown: false });
               }, 2000);
             } else if (data.body.existing === "email") {
-              setToast({ isShown: true, toastMessage: data.body.message });
+              setToast({ isShown: true, toastTitle: 'Error', toastMessage: data.body.message, toastType: 'fail' });
               setTimeout(() => {
                 setToast({ isShown: false });
               }, 2000);

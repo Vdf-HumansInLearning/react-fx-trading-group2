@@ -59,6 +59,12 @@
       "username": "oanajijj",
       "email": "oana@oana2.comjlkj",
       "password": "Test123!"
+    },
+    {
+      "id": 11,
+      "username": "oanah",
+      "email": "admin@shop.ro",
+      "password": "Test123!"
     }
   ]
 }
