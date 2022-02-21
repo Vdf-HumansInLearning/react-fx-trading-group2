@@ -1,68 +1,106 @@
-import React, { useState } from "react";
+import React, { Component, useState, useEffect, useRef } from "react";
 import WidgetAdd from "./WidgetAdd";
 import "../styles/style-index.css";
 import WidgetPickCurrency from "./WidgetPickCurrency";
 import Toast from "./Toast";
 import WidgetMain from "./WidgetMain";
 
-function RatesView() {
-  const [toast, setToast] = useState({
-    isShown: false,
-    toastTitle: "",
-    toastMessage: "",
-    toastType: "success",
-  });
+class RatesView extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      toast: {
+        isShown: false,
+        toastTitle: "",
+        toastMessage: "",
+        toastType: "success",
+      },
+      cards: [],
+      cardId: 0,
+      item: {
+        mainCurrency: "",
+        secondCurrency: "",
+        sellRate: 0,
+        buyRate: 0,
+      },
+    };
 
-  const [cards, setCards] = useState([]);
-  const [main, setMain] = useState(0);
-  const [pick, setPick] = useState(0);
-  const [cardId, setCardId] = useState(0);
+    this.addPickWidget = this.addPickWidget.bind(this);
+    this.addNewWidget = this.addNewWidget.bind(this);
+    this.closeWidget = this.closeWidget.bind(this);
+    this.selectCurrency = this.selectCurrency.bind(this);
+    this.confirmSelectionCurrency = this.confirmSelectionCurrency.bind(this);
+  }
 
-  const [item, setItem] = useState({
-    mainCurrency: "",
-    secondCurrency: "",
-    sellRate: 0,
-    buyRate: 0,
-  });
-
-  const addPickWidget = () => {
-    if (pick + main <= 4) {
-      setCards([
-        ...cards,
-        <WidgetPickCurrency
-          cardIdCounter={cardId}
-          key={cardId}
-          closeWidget={closeWidget}
-          selectCurrency={selectCurrency}
-          confirmSelectionCurrency={confirmSelectionCurrency}
-        />,
-      ]);
-      setPick(pick + 1);
-      setCardId(cardId + 1);
+  addPickWidget() {
+    const { cardId, cards } = this.state;
+    if (cards.length < 5) {
+      this.setState({
+        cards: [
+          ...cards,
+          <WidgetPickCurrency
+            cardIdCounter={cardId}
+            key={"key" + cardId}
+            closeWidget={this.closeWidget}
+            selectCurrency={this.selectCurrency}
+            confirmSelectionCurrency={this.confirmSelectionCurrency}
+          />,
+        ],
+      });
+      this.setState({ cardId: cardId + 1 });
     } else {
       setTimeout(() => {
-        setToast({
-          isShown: true,
-          toastTitle: "Error",
-          toastMessage: "You cannot have more than 5 widgets on the page.",
-          toastType: "fail",
+        this.setState({
+          toast: {
+            isShown: true,
+            toastTitle: "Error",
+            toastMessage: "You cannot have more than 5 widgets on the page.",
+            toastType: "fail",
+          },
         });
       }, 2000);
     }
-  };
+    setTimeout(() => {
+      this.setState({
+        toast: {
+          isShown: false,
+        },
+      });
+    }, 2000);
+  }
 
-  function closeWidget(cardId) {
+  closeWidget(cardId) {
+    if (!cardId) {
+      return;
+    }
     if (cardId.startsWith("pickCard")) {
-      document.getElementById(cardId).remove();
-      setPick(pick - 1);
+      let idToDelete = cardId.substring(cardId.indexOf("d") + 1);
+      idToDelete = parseInt(idToDelete);
+
+      let array = [...this.state.cards]; // make a separate copy of the array
+      let index = array.findIndex((card) => card.cardIdCounter == idToDelete);
+      if (index !== -1) {
+        array.splice(index, 1);
+        this.setState({
+          cards: array,
+        });
+      }
+      //remove from cards list function
     } else if (cardId.startsWith("card")) {
-      document.getElementById(cardId).remove();
-      setMain(main - 1);
+      //document.getElementById(cardId).remove();
       //stop(cardId);
     }
   }
 
-  function selectCurrency(cardId) {
+  // const firstUpdate = useRef(true);
+  // useEffect(() => {
+  //   if (firstUpdate.current) {
+  //     firstUpdate.current = false;
+  //     return;
+  //   }
+  // }, [cards]);
+
+  selectCurrency(cardId) {
     let card = document.getElementById(cardId);
     let inputMainCurrency = card.querySelector("#inputMainCurrency");
     let inputSecondCurrency = card.querySelector("#inputSecondCurrency");
@@ -75,117 +113,43 @@ function RatesView() {
       ) {
         //user must choose two different currencies
         if (inputMainCurrency.value == inputSecondCurrency.value) {
-          setToast({
-            isShown: true,
-            toastTitle: "Error",
-            toastMessage: "You must choose two different currencies.",
-            toastType: "fail",
+          this.setState({
+            toast: {
+              isShown: true,
+              toastTitle: "Error",
+              toastMessage: "You must choose two different currencies.",
+              toastType: "fail",
+            },
           });
           btn_confirm_selection.disabled = true;
           setTimeout(() => {
-            setToast({ isShown: false });
+            this.setState({
+              toast: {
+                isShown: false,
+              },
+            });
           }, 2000);
         }
       }
   }
 
-  function confirmSelectionCurrency(cardId) {
-    let card = document.getElementById("pickCard" + cardId);
-    let inputMainCurrency = card.querySelector("#inputMainCurrency");
-    let inputSecondCurrency = card.querySelector("#inputSecondCurrency");
-
-    if (
-      inputMainCurrency.value &&
-      inputSecondCurrency.value &&
-      inputMainCurrency.value !== "opt_none" &&
-      inputSecondCurrency.value !== "opt_none"
-    ) {
-      if (inputMainCurrency.value == inputSecondCurrency.value) {
-        setTimeout(() => {
-          setToast({
-            isShown: true,
-            toastTitle: "Error",
-            toastMessage: "You must choose two different currencies.",
-            toastType: "fail",
-          });
-        }, 2000);
-      } else {
-        let currencyObj = {
-          base_currency: inputMainCurrency.value,
-          quote_currency: inputSecondCurrency.value,
-        };
-        console.log(currencyObj);
-        fetch("http://localhost:8080/api/currencies/quote", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(currencyObj),
-        })
-          .then((res) =>
-            res.json().then((data) => ({ status: res.status, body: data }))
-          )
-          .then((response) => {
-            if (response.status === 200) {
-              //inputId++;
-              //populate the item
-              console.log("asdasdas");
-              setItem({
-                mainCurrency: currencyObj.base_currency,
-                secondCurrency: currencyObj.quote_currency,
-                sellRate: response.body.sell,
-                buyRate: response.body.buy,
-              });
-              //create the page
-              addNewWidget(cardId);
-              //   start(
-              //     currencyObj.base_currency,
-              //     currencyObj.quote_currency,
-              //     inputId,
-              //     currentCardId
-              //   );
-            } else {
-              setTimeout(() => {
-                setToast({
-                  isShown: true,
-                  toastTitle: "Error",
-                  toastMessage: response.body,
-                  toastType: "fail",
-                });
-              }, 2000);
-            }
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-          });
-      }
-    } else {
-      setTimeout(() => {
-        setToast({
-          isShown: true,
-          toastTitle: "Error",
-          toastMessage: "Currency fields cannot be empty.",
-          toastType: "fail",
-        });
-      }, 2000);
-    }
-  }
-
-  function addNewWidget(cardId) {
+  addNewWidget(cardId) {
     //no more that 5 cards
-    if (pick + main <= 5) {
+    if (this.state.cards.length < 5) {
       //const newWidget = createMainWidget(item);
-      setCards([
-        ...cards,
-        <WidgetMain
-          cardIdCounter={cardId}
-          key={cardId}
-          closeWidget={closeWidget}
-          item={item}
-        />,
-      ]);
-      setMain(main + 1);
-      setCardId(cardId + 1);
+      this.setState({
+        cards: [
+          ...this.state.cards,
+          <WidgetMain
+            cardIdCounter={cardId}
+            key={"key" + cardId}
+            closeWidget={this.closeWidget}
+            item={this.state.item}
+          />,
+        ],
+      });
+
+      this.setState({ cardId: this.state.cardId + 1 });
       //   cardsRow.prepend(newWidget);
       //   let currentInputId = `swapp${inputId}`;
       //   let swappId = document.getElementById(currentInputId);
@@ -232,34 +196,134 @@ function RatesView() {
       //   closeWidget(cardId);
       //   mainWidgetsNr++;
     } else {
-      setTimeout(() => {
-        setToast({
+      this.setState({
+        toast: {
           isShown: true,
           toastTitle: "Error",
           toastMessage: "You cannot have more than 5 widgets on the page.",
           toastType: "fail",
+        },
+      });
+      setTimeout(() => {
+        this.setState({
+          toast: {
+            isShown: false,
+          },
         });
       }, 2000);
     }
   }
 
-  return (
-    <section className="col-sm-12 col-md-12 col-lg-6">
-      <Toast
-        isShown={toast.isShown}
-        toastTitle={toast.toastTitle}
-        toastMessage={toast.toastMessage}
-        toastType={toast.toastType}
-      />
-      <h5 className="color-titles">Fx Rates View</h5>
-      <div className="cards-container">
-        <div className="row row-cols-1 row-cols-sm-2 g-4">
-          {cards}
-          <WidgetAdd addPickWidget={addPickWidget} />
+  confirmSelectionCurrency(cardId) {
+    let card = document.getElementById("pickCard" + cardId);
+    let inputMainCurrency = card.querySelector("#inputMainCurrency");
+    let inputSecondCurrency = card.querySelector("#inputSecondCurrency");
+
+    if (
+      inputMainCurrency.value &&
+      inputSecondCurrency.value &&
+      inputMainCurrency.value !== "opt_none" &&
+      inputSecondCurrency.value !== "opt_none"
+    ) {
+      if (inputMainCurrency.value == inputSecondCurrency.value) {
+        setTimeout(() => {
+          this.setState({
+            toast: {
+              isShown: true,
+              toastTitle: "Error",
+              toastMessage: "You must choose two different currencies.",
+              toastType: "fail",
+            },
+          });
+        }, 2000);
+      } else {
+        let currencyObj = {
+          base_currency: inputMainCurrency.value,
+          quote_currency: inputSecondCurrency.value,
+        };
+        console.log(currencyObj);
+        fetch("http://localhost:8080/api/currencies/quote", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(currencyObj),
+        })
+          .then((res) =>
+            res.json().then((data) => ({ status: res.status, body: data }))
+          )
+          .then((response) => {
+            if (response.status === 200) {
+              //inputId++;
+              //populate the item
+              console.log("asdasdas");
+              this.setState({
+                item: {
+                  mainCurrency: currencyObj.base_currency,
+                  secondCurrency: currencyObj.quote_currency,
+                  sellRate: response.body.sell,
+                  buyRate: response.body.buy,
+                },
+              });
+              //create the page
+              this.addNewWidget(cardId);
+              //   start(
+              //     currencyObj.base_currency,
+              //     currencyObj.quote_currency,
+              //     inputId,
+              //     currentCardId
+              //   );
+            } else {
+              setTimeout(() => {
+                this.setState({
+                  toast: {
+                    isShown: true,
+                    toastTitle: "Error",
+                    toastMessage: response.body,
+                    toastType: "fail",
+                  },
+                });
+              }, 2000);
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      }
+    } else {
+      setTimeout(() => {
+        this.setState({
+          toast: {
+            isShown: true,
+            toastTitle: "Error",
+            toastMessage: "Currency fields cannot be empty.",
+            toastType: "fail",
+          },
+        });
+      }, 2000);
+    }
+  }
+
+  render() {
+    const { toast, cards } = this.state;
+    return (
+      <section className="col-sm-12 col-md-12 col-lg-6">
+        <Toast
+          isShown={toast.isShown}
+          toastTitle={toast.toastTitle}
+          toastMessage={toast.toastMessage}
+          toastType={toast.toastType}
+        />
+        <h5 className="color-titles">Fx Rates View</h5>
+        <div className="cards-container">
+          <div className="row row-cols-1 row-cols-sm-2 g-4">
+            {cards}
+            <WidgetAdd addPickWidget={this.addPickWidget} />
+          </div>
         </div>
-      </div>
-    </section>
-  );
+      </section>
+    );
+  }
 }
 
 export default RatesView;
