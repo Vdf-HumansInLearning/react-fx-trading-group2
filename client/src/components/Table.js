@@ -1,31 +1,47 @@
-import React, { useState } from "react";
-import useFetch from "./UseFetch";
+import React, { Component } from "react";
 import '../styles/style-index.css'
 import TableHead from "./TableHead";
 import TableBody from "./TableBody";
 import CurrenciesPairs from "./CurrenciesPairs";
+import Toast from "./Toast";
 
-function Table() {
-    const { data: transactions, error, isPending } = useFetch(`http://localhost:8080/api/transactions`);
-    const { data: currencies } = useFetch(`http://localhost:8080/api/currencies/pairs`);
-    const [sortObj, setSortObj] = useState({
-        username: true,
-        ccy_pair: true,
-        action: true,
-        notional: true,
-        trans_date: true,
-    });
-    const [trans, setTrans] = useState({
-        trans: transactions
-    })
+class Table extends Component {
 
-    function sortEntries(property, sortType) {
+    constructor(props) {
+        super(props);
+        console.log(props.currencies)
+        this.state = {
+            sortObj: [{
+                username: true,
+                ccy_pair: true,
+                action: true,
+                notional: true,
+                trans_date: true
+            }],
+            toast: {
+                isShown: false,
+                toastTitle: "",
+                toastMessage: "",
+                toastType: "success",
+            },
+            transactions: props.trans,
+            registartions: props.trans,
+            currentSelectionTable: []
+        };
+        this.sortEntries = this.sortEntries.bind(this);
+        this.parseDates = this.parseDates.bind(this);
+        this.filterBlotterTable = this.filterBlotterTable.bind(this);
+
+        this.setState({ currencies: props.currencies })
+    }
+
+    sortEntries(property, sortType) {
         let filteredRegistrations = [];
-        let currentSelectionTable = transactions;
+        let currentSelectionTable = this.state.transactions;
 
         switch (sortType) {
             case "alphabetical":
-                if (sortObj[property]) {
+                if (this.state.sortObj[property]) {
                     filteredRegistrations = currentSelectionTable.sort((a, b) =>
                         a[property].toLowerCase().localeCompare(b[property].toLowerCase())
                     );
@@ -36,7 +52,7 @@ function Table() {
                 }
                 break;
             case "numerical":
-                if (sortObj[property]) {
+                if (this.state.sortObj[property]) {
                     filteredRegistrations = currentSelectionTable.sort(
                         (a, b) => a[property] - b[property]
                     );
@@ -47,9 +63,9 @@ function Table() {
                 }
                 break;
             case "date":
-                if (sortObj[property]) {
+                if (this.state.sortObj[property]) {
                     filteredRegistrations = currentSelectionTable.sort((a, b) => {
-                        let { firstDate, secondDate } = parseDates(
+                        let { firstDate, secondDate } = this.parseDates(
                             a,
                             b,
                             property,
@@ -59,7 +75,7 @@ function Table() {
                     });
                 } else {
                     filteredRegistrations = currentSelectionTable.sort((a, b) => {
-                        let { firstDate, secondDate } = parseDates(
+                        let { firstDate, secondDate } = this.parseDates(
                             a,
                             b,
                             property,
@@ -69,17 +85,20 @@ function Table() {
                     });
                 }
                 break;
+            default:
+                break;
         }
-        setSortObj({
-            ...sortObj,
-            [property]: !sortObj[property],
+        this.setState({
+            transactions: filteredRegistrations,
+            registartions: filteredRegistrations,
+            sortObj: {
+                ...this.state.sortObj,
+                [property]: !this.state.sortObj[property]
+            }
         })
-        setTrans({
-            trans: filteredRegistrations
-        });
     }
 
-    function parseDates(a, b, property, propertyHour) {
+    parseDates(a, b, property, propertyHour) {
         let incomingDateA = a[property].substring(0, 10);
         let newIncomingDateA = incomingDateA.split("/");
         [newIncomingDateA[0], newIncomingDateA[1]] = [
@@ -110,31 +129,96 @@ function Table() {
         };
     }
 
-    return (
-        <section className="col-sm-12 col-md-12 col-lg-6">
-            <h5 className="color-titles">Blotter View</h5>
-            <hr />
-            <div className="blotter-buttons">
-                <p className="subtitle">FILTERS</p>
-                <div className="vertical-line"></div>
-                <div className="row">
-                    {currencies && (
-                        <CurrenciesPairs currencies={currencies} transactions={transactions} />
-                    )}
+    filterBlotterTable() {
+        const inputCcy = document.getElementById("inputCcy").value;
+        let selectedDate = document.getElementById("inputDateFilter").value;
+        let dateArray = selectedDate.split("-").reverse();
+        selectedDate = dateArray.join("/");
+        let currentSelectionTable = this.state.registartions;
+
+        //ccy input and date input exist
+        if (inputCcy !== "opt_none" && selectedDate.length !== 0) {
+            const selectedPair = document.getElementById("inputCcy").value;
+            currentSelectionTable = currentSelectionTable
+                .filter((i) => i.ccy_pair === selectedPair)
+                .filter((i) => i.trans_date.startsWith(selectedDate));
+            if (currentSelectionTable.length === 0) {
+                this.setState({
+                    toast: {
+                        isShown: true,
+                        toastTitle: "Not found",
+                        toastMessage: "There are no registrations available for selected filters. Please select another options.",
+                        toastType: "fail"
+                    }
+                });
+            }
+
+        }
+        //ccy input exists but date input doesn`t
+        else if (inputCcy !== "opt_none" && selectedDate.length === 0) {
+            const selectedPair = document.getElementById("inputCcy").value;
+            currentSelectionTable = currentSelectionTable
+                .filter((i) => i.ccy_pair === selectedPair);
+            if (currentSelectionTable.length === 0) {
+                this.setState({
+                    toast: {
+                        isShown: true,
+                        toastTitle: "Not found",
+                        toastMessage: "There are no registrations available for selected filters. Please select another options.",
+                        toastType: "fail"
+                    }
+                });
+            }
+
+        }
+        //date input exists but ccy input doesn`t
+        else if (inputCcy === "opt_none" && selectedDate.length !== 0) {
+            currentSelectionTable = currentSelectionTable.filter((i) =>
+                i.trans_date.startsWith(selectedDate)
+            );
+            if (currentSelectionTable.length === 0) {
+                this.setState({
+                    toast: {
+                        isShown: true,
+                        toastTitle: "Not found",
+                        toastMessage: "There are no registrations available for selected filters. Please select another options.",
+                        toastType: "fail"
+                    }
+                });
+            }
+        }
+        this.setState({ transactions: currentSelectionTable })
+    }
+
+    render() {
+        return (
+            <section className="col-sm-12 col-md-12 col-lg-6" >
+                <Toast
+                    isShown={this.state.toast.isShown}
+                    toastTitle={this.state.toast.toastTitle}
+                    toastMessage={this.state.toast.toastMessage}
+                    toastType={this.state.toast.toastType}
+                />
+                <h5 className="color-titles">Blotter View</h5>
+                <hr />
+                <div className="blotter-buttons">
+                    <p className="subtitle">FILTERS</p>
+                    <div className="vertical-line"></div>
+                    <div className="row">
+                        {this.props.currencies && (
+                            <CurrenciesPairs currencies={this.props.currencies} filterBlotterTable={this.filterBlotterTable} />
+                        )}
+                    </div>
                 </div>
-            </div>
-            <div className="table-responsive">
-                {isPending && <div>Loading...</div>}
-                {error && <div>{error}</div>}
-                {transactions && (
+                <div className="table-responsive">
                     <table id="blotter-table" className="table table-striped col-xs-7 table-condensed tabe-fixed">
-                        <TableHead sortEntries={sortEntries} />
-                        <TableBody transactions={transactions} />
+                        <TableHead sortEntries={this.sortEntries} />
+                        <TableBody transactions={this.state.transactions} />
                     </table>
-                )}
-            </div>
-        </section >
-    )
+                </div>
+            </section >
+        )
+    }
 }
 
 export default Table;

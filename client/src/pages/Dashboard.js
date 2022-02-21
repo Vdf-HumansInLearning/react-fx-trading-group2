@@ -4,10 +4,14 @@ import Table from "../components/Table";
 import RatesView from "../components/RatesView";
 import Navbar from "./../components/Navbar";
 import Toast from "../components/Toast";
+import useFetch from "../components/UseFetch";
 
 import '../styles/style-index.css'
 
 function Dashboard() {
+
+  const { data: trans, error, isPending } = useFetch(`http://localhost:8080/api/transactions`);
+  const { data: currencies } = useFetch(`http://localhost:8080/api/currencies/pairs`);
 
   const navigate = useNavigate();
   const [toast, setToast] = useState({
@@ -42,7 +46,11 @@ function Dashboard() {
         <Navbar clearCookiesOnLogout={clearCookiesOnLogout} />
         <main className="container-fluid row mb-5">
           <RatesView />
-          <Table />
+          {isPending && <div>Loading...</div>}
+          {error && <div>{error}</div>}
+          {trans &&
+            < Table trans={trans} currencies={currencies} />
+          }
         </main>
       </div>
     </>
