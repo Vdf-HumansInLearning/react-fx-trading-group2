@@ -49,16 +49,14 @@ class RatesView extends Component {
       });
       this.setState({ cardId: cardId + 1 });
     } else {
-      setTimeout(() => {
-        this.setState({
-          toast: {
-            isShown: true,
-            toastTitle: "Error",
-            toastMessage: "You cannot have more than 5 widgets on the page.",
-            toastType: "fail",
-          },
-        });
-      }, 2000);
+      this.setState({
+        toast: {
+          isShown: true,
+          toastTitle: "Error",
+          toastMessage: "You cannot have more than 5 widgets on the page.",
+          toastType: "fail",
+        },
+      });
     }
     setTimeout(() => {
       this.setState({
@@ -66,39 +64,25 @@ class RatesView extends Component {
           isShown: false,
         },
       });
-    }, 2000);
+    }, 3000);
   }
 
   closeWidget(cardId) {
-    if (!cardId) {
-      return;
-    }
+    let { cards } = this.state
     if (cardId.startsWith("pickCard")) {
-      let idToDelete = cardId.substring(cardId.indexOf("d") + 1);
-      idToDelete = parseInt(idToDelete);
-
-      let array = [...this.state.cards]; // make a separate copy of the array
-      let index = array.findIndex((card) => card.cardIdCounter == idToDelete);
-      if (index !== -1) {
-        array.splice(index, 1);
-        this.setState({
-          cards: array,
-        });
-      }
-      //remove from cards list function
+      let id = cardId.substring(8);
+      this.setState({
+        cards: cards.filter((i) =>
+          i.props.cardIdCounter !== Number(id))
+      })
     } else if (cardId.startsWith("card")) {
-      //document.getElementById(cardId).remove();
+      let id = cardId.substring(4);
+      this.setState({
+        cards: cards.filter((i) => (i.props.cardIdCounter) !== Number(id))
+      });
       //stop(cardId);
     }
   }
-
-  // const firstUpdate = useRef(true);
-  // useEffect(() => {
-  //   if (firstUpdate.current) {
-  //     firstUpdate.current = false;
-  //     return;
-  //   }
-  // }, [cards]);
 
   selectCurrency(cardId) {
     let card = document.getElementById(cardId);
