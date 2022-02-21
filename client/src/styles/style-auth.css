@@ -95,14 +95,6 @@ form p {
   text-align: left;
 }
 
-#error-modal {
-  display: flex;
-  justify-content: center;
-  color: red;
-  font-size: 21px;
-  font-family: "Montserrat";
-}
-
 @media (max-width: 990px) {
   .aside {
     display: none;
