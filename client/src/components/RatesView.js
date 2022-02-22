@@ -1,4 +1,4 @@
-import React, { Component, useState, useEffect, useRef } from "react";
+import React, { Component } from "react";
 import WidgetAdd from "./WidgetAdd";
 import "../styles/style-index.css";
 import WidgetPickCurrency from "./WidgetPickCurrency";
@@ -18,7 +18,7 @@ class RatesView extends Component {
       },
       cards: [],
       cardId: 0,
-      sendSelectedCurrency: [],
+      mainWidgetItems: [],
       item: {
         id: 0,
         mainCurrency: "",
@@ -34,6 +34,7 @@ class RatesView extends Component {
     this.closeWidget = this.closeWidget.bind(this);
     this.selectCurrency = this.selectCurrency.bind(this);
     this.confirmSelectionCurrency = this.confirmSelectionCurrency.bind(this);
+    this.swapCurrencies = this.swapCurrencies.bind(this)
     this.start = this.start.bind(this);
     this.stop = this.stop.bind(this);
   }
@@ -84,9 +85,9 @@ class RatesView extends Component {
     } else if (cardId.startsWith("card")) {
       let id = cardId.substring(4);
       this.stop(id);
-      let array = [...this.state.sendSelectedCurrency];
+      let array = [...this.state.mainWidgetItems];
       let indexItem = array.findIndex(
-        (item, index) => this.state.sendSelectedCurrency[index].id == Number(id)
+        (item, index) => this.state.mainWidgetItems[index].id === Number(id)
       );
 
       array.splice(indexItem, 1);
@@ -109,7 +110,7 @@ class RatesView extends Component {
         inputSecondCurrency.value !== "opt_none"
       ) {
         //user must choose two different currencies
-        if (inputMainCurrency.value == inputSecondCurrency.value) {
+        if (inputMainCurrency.value === inputSecondCurrency.value) {
           this.setState({
             toast: {
               isShown: true,
@@ -130,6 +131,44 @@ class RatesView extends Component {
       }
   }
 
+  swapCurrencies(cardId) {
+    let list = [...this.state.mainWidgetItems];
+    let allCards = [...this.state.cards];
+
+    let indexCard = list.findIndex((i) =>
+      i.id == Number(cardId)
+    )
+
+    list.splice(indexCard, 1, {
+      id: cardId,
+      buyRate: list[indexCard].sellRate,
+      mainCurrency: list[indexCard].secondCurrency,
+      secondCurrency: list[indexCard].mainCurrency,
+      sellRate: list[indexCard].buyRate
+    });
+
+    let index = allCards.findIndex((i) =>
+      i.props.cardIdCounter == Number(cardId)
+    )
+    console.log(index)
+    allCards.splice(index, 1,
+      <WidgetMain
+        cardIdCounter={cardId}
+        key={"mainKey" + cardId}
+        closeWidget={this.closeWidget}
+        item={list[indexCard]}
+        swapCurrencies={this.swapCurrencies}
+      />
+    )
+
+    this.setState({
+      mainWidgetItems: list,
+      cards: allCards
+    })
+    this.stop(cardId);
+    this.start(list[indexCard].mainCurrency, list[indexCard].secondCurrency, cardId);
+  }
+
   addNewWidget(cardId) {
     //no more that 5 cards
     if (this.state.cards.length < 5) {
@@ -142,56 +181,13 @@ class RatesView extends Component {
             key={"mainKey" + cardId}
             closeWidget={this.closeWidget}
             item={this.state.item}
+            swapCurrencies={this.swapCurrencies}
           />,
         ],
       });
 
       this.setState({ cardId: this.state.cardId + 1 });
-      //   cardsRow.prepend(newWidget);
-      //   let currentInputId = `swap${inputId}`;
-      //   let swapId = document.getElementById(currentInputId);
-      //   swapId.addEventListener("click", () => {
-      //     let numberIdToSwap = currentInputId.substring(5);
-      //     let mainCurrencyToSwap = document
-      //       .querySelector(`#mainCurrency${numberIdToSwap}`)
-      //       .getAttribute("value");
-      //     let secondCurrencyToSwap = document
-      //       .querySelector(`#secondCurrency${numberIdToSwap}`)
-      //       .getAttribute("value");
-      //     let sellValueToSwap = document
-      //       .querySelector(`#sellRate${numberIdToSwap}`)
-      //       .getAttribute("value");
-      //     let buyValueToSwap = document
-      //       .querySelector(`#buyRate${numberIdToSwap}`)
-      //       .getAttribute("value");
-      //     let tempMainCurrency = secondCurrencyToSwap;
-      //     let tempSecondCurrency = mainCurrencyToSwap;
-      //     let tempSellValue = buyValueToSwap;
-      //     let tempBuyValue = sellValueToSwap;
-      //     document.getElementById(`mainCurrency${numberIdToSwap}`).textContent =
-      //       tempMainCurrency;
-      //     document
-      //       .getElementById(`mainCurrency${numberIdToSwap}`)
-      //       .setAttribute("value", tempMainCurrency);
-      //     document.getElementById(`secondCurrency${numberIdToSwap}`).textContent =
-      //       tempSecondCurrency;
-      //     document
-      //       .getElementById(`secondCurrency${numberIdToSwap}`)
-      //       .setAttribute("value", tempSecondCurrency);
-      //     document.getElementById(`sellRate${numberIdToSwap}`).textContent =
-      //       tempSellValue;
-      //     document
-      //       .getElementById(`sellRate${numberIdToSwap}`)
-      //       .setAttribute("value", tempSellValue);
-      //     document.getElementById(`buyRate${numberIdToSwap}`).textContent =
-      //       tempBuyValue;
-      //     document
-      //       .getElementById(`buyRate${numberIdToSwap}`)
-      //       .setAttribute("value", tempBuyValue);
-      //     swapIcons(numberIdToSwap);
-      //   });
-      //   closeWidget(cardId);
-      //   mainWidgetsNr++;
+
     } else {
       this.setState({
         toast: {
@@ -260,7 +256,7 @@ class RatesView extends Component {
                   sellRate: response.body.sell,
                   buyRate: response.body.buy,
                 },
-                sendSelectedCurrency: [...this.state.sendSelectedCurrency, {
+                mainWidgetItems: [...this.state.mainWidgetItems, {
                   id: cardId,
                   mainCurrency: currencyObj.base_currency,
                   secondCurrency: currencyObj.quote_currency,
@@ -322,7 +318,6 @@ class RatesView extends Component {
       baseUrl +
       `currencies/quote?base_currency=${base_currency}&quote_currency=${quote_currency}`
     );
-
     console.log(eventSource);
 
     this.setState({
@@ -350,9 +345,9 @@ class RatesView extends Component {
       console.log(currencyObj);
       //populate the itemstop
 
-      let array = [...this.state.sendSelectedCurrency];
+      let array = [...this.state.mainWidgetItems];
       let indexItem = array.findIndex(
-        (item, index) => this.state.sendSelectedCurrency[index].id === Number(currentCardId)
+        (item, index) => this.state.mainWidgetItems[index].id === Number(currentCardId)
       );
       let arrayWidget = [...this.state.cards];
 
@@ -375,12 +370,13 @@ class RatesView extends Component {
           cardIdCounter={currentCardId}
           key={"mainKey" + currentCardId}
           closeWidget={this.closeWidget}
-          item={this.state.sendSelectedCurrency[indexItem]}
+          item={this.state.mainWidgetItems[indexItem]}
+          swapCurrencies={this.swapCurrencies}
         />
       );
 
       this.setState({
-        sendSelectedCurrency: array,
+        mainWidgetItems: array,
         cards: arrayWidget
       });
     };

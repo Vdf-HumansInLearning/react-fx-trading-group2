@@ -1,7 +1,7 @@
 import React from "react";
 import "../styles/style-index.css";
 
-const WidgetMain = ({ cardIdCounter, item, closeWidget }) => {
+const WidgetMain = ({ cardIdCounter, item, closeWidget, swapCurrencies }) => {
   return (
     <div className="col" id={`card${cardIdCounter}`}>
       <div className="card">
@@ -25,7 +25,7 @@ const WidgetMain = ({ cardIdCounter, item, closeWidget }) => {
               </span>
             </p>
             <div className="icon-exchange">
-              <i className="fas fa-exchange-alt" id={`swap${cardIdCounter}`}></i>
+              <i className="fas fa-exchange-alt" id={`swap${cardIdCounter}`} onClick={() => swapCurrencies(cardIdCounter)}></i>
             </div>
           </div>
           <button
