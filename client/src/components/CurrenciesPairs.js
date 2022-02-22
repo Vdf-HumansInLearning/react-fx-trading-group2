@@ -8,9 +8,9 @@ function CurrenciesPairs({ currencies, filterBlotterTable }) {
                 <label className="input-group-text" htmlFor="inputCcy">CCY Pair</label>
                 <select className="form-select" id="inputCcy"
                     onChange={filterBlotterTable}>
-                    <option value="opt_none">Choose..</option>
+                    <option defaultValue="opt_none">Choose..</option>
                     {currencies.map((pair) => (
-                        <option value={pair} id={pair} key={pair}>{pair}</option>
+                        <option defaultValue={pair} id={pair} key={pair}>{pair}</option>
                     ))}
                 </select>
             </div>

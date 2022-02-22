@@ -6,14 +6,14 @@ function TableBody({ transactions }) {
             {transactions.map((trans, index) => (
                 <tr key={trans.id}>
                     <th scope="row">{index + 1}</th>
-                    <td>{trans.username}</td>
-                    <td>{trans.ccy_pair}</td>
-                    <td>{trans.rate}</td>
-                    <td>{trans.action}</td>
-                    <td>{trans.notional}</td>
-                    <td>{trans.tenor}</td>
-                    <td>{trans.trans_date} {trans.trans_hour}</td>
-                    <td>{(trans.rate * trans.notional).toFixed(2)}</td>
+                    <td className='username__col'>{trans.username}</td>
+                    <td className='ccy__col'>{trans.ccy_pair}</td>
+                    <td className='rate__col'>{trans.rate}</td>
+                    <td className='action__col'>{trans.action}</td>
+                    <td className='notional__col'>{trans.notional}</td>
+                    <td className='tenor__col'>{trans.tenor}</td>
+                    <td className='date__col'>{trans.trans_date} {trans.trans_hour}</td>
+                    <td className='amount__col'>{(trans.rate * trans.notional).toFixed(2)}</td>
                 </tr>
             ))}
         </tbody>
