@@ -10,13 +10,19 @@ function App() {
 
   let isUserLogged = Cookies.get('username');
   //TO DO: dont show dashboard if the user is not logged in
+  // {
+  //   isUserLogged
+  //     ? <Route path="/dashboard" element={<Dashboard />} />
+  //     : <Route path="/login" element={<Login />} />
+  // }
+
   return (
     <div className="App">
       <Routes>
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/" element={<Login />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </div>

@@ -9,7 +9,6 @@ class Table extends Component {
 
     constructor(props) {
         super(props);
-        console.log(props.currencies)
         this.state = {
             sortObj: [{
                 username: true,

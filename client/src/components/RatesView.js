@@ -148,9 +148,9 @@ class RatesView extends Component {
 
       this.setState({ cardId: this.state.cardId + 1 });
       //   cardsRow.prepend(newWidget);
-      //   let currentInputId = `swapp${inputId}`;
-      //   let swappId = document.getElementById(currentInputId);
-      //   swappId.addEventListener("click", () => {
+      //   let currentInputId = `swap${inputId}`;
+      //   let swapId = document.getElementById(currentInputId);
+      //   swapId.addEventListener("click", () => {
       //     let numberIdToSwap = currentInputId.substring(5);
       //     let mainCurrencyToSwap = document
       //       .querySelector(`#mainCurrency${numberIdToSwap}`)
@@ -252,7 +252,6 @@ class RatesView extends Component {
             if (response.status === 200) {
               //inputId++;
               //populate the item
-              console.log("asdasdas");
               this.setState({
                 item: {
                   id: cardId,
@@ -369,7 +368,6 @@ class RatesView extends Component {
         (item, index) => arrayWidget[index].props.cardIdCounter == Number(currentCardId)
       );
 
-      console.log(index1)
       arrayWidget.splice(
         index1,
         1,

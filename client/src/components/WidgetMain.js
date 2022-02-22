@@ -10,7 +10,7 @@ const WidgetMain = ({ cardIdCounter, item, closeWidget }) => {
             <p className="subtitle">
               <span
                 className="text-large "
-                id="mainCurrency1"
+                id={`mainCurrency${cardIdCounter}`}
                 defaultValue={item.mainCurrency}
               >
                 {item.mainCurrency}
@@ -18,14 +18,14 @@ const WidgetMain = ({ cardIdCounter, item, closeWidget }) => {
               <span>/</span>
               <span
                 className="secondCurrency"
-                id="secondCurrency1"
+                id={`secondCurrency${cardIdCounter}`}
                 defaultValue={item.secondCurrency}
               >
                 {item.secondCurrency}
               </span>
             </p>
             <div className="icon-exchange">
-              <i className="fas fa-exchange-alt" id="swapp1"></i>
+              <i className="fas fa-exchange-alt" id={`swap${cardIdCounter}`}></i>
             </div>
           </div>
           <button
@@ -41,12 +41,12 @@ const WidgetMain = ({ cardIdCounter, item, closeWidget }) => {
             <span
               className="text-large"
               defaultValue={item.sellRate}
-              id="sellRate1"
+              id={`sellRate${cardIdCounter}`}
             >
               {item.sellRate}
             </span>
             <span className="icon-up">
-              <i className="fas fa-caret-up" id="iconDown1"></i>
+              <i className="fas fa-caret-up" id={`iconDown${cardIdCounter}`}></i>
             </span>
           </p>
           <p className="subtitle mb-0">
@@ -54,12 +54,12 @@ const WidgetMain = ({ cardIdCounter, item, closeWidget }) => {
             <span
               className="text-large"
               defaultValue={item.buyRate}
-              id="buyRate1"
+              id={`buyRate${cardIdCounter}`}
             >
               {item.buyRate}
             </span>
             <span className="icon-down">
-              <i className="fas fa-caret-down" id="iconUp1"></i>
+              <i className="fas fa-caret-down" id={`iconUp${cardIdCounter}`}></i>
             </span>
           </p>
         </div>
@@ -71,17 +71,17 @@ const WidgetMain = ({ cardIdCounter, item, closeWidget }) => {
             <input
               className="form-control"
               type="number"
-              id="inputDate1"
+              id={`inputDate${cardIdCounter}`}
               placeholder="Amount"
               min="1"
             ></input>
           </div>
           <div className="input-group mb-3">
-            <label className="input-group-text" htmlFor="inputCcy1">
+            <label className="input-group-text" htmlFor={`inputCcy${cardIdCounter}`}>
               Tenor
             </label>
-            <select className="form-select" id="inputCcy1">
-              <option selected={true} id="optionDefault">
+            <select className="form-select" id={`inputCcy${cardIdCounter}`}>
+              <option value={true} id="optionDefault">
                 Choose...
               </option>
               <option defaultValue="Spot">Spot</option>
@@ -99,7 +99,7 @@ const WidgetMain = ({ cardIdCounter, item, closeWidget }) => {
           </button>
         </div>
       </div>
-    </div>
+    </div >
   );
 };
 
