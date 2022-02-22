@@ -131,12 +131,22 @@ const Register = () => {
             }, 2000);
           } else if (data.status === 409) {
             if (data.body.existing === "username") {
-              setToast({ isShown: true, toastTitle: 'Error', toastMessage: data.body.message, toastType: 'fail' });
+              setToast({
+                isShown: true,
+                toastTitle: "Error",
+                toastMessage: data.body.message,
+                toastType: "fail",
+              });
               setTimeout(() => {
                 setToast({ isShown: false });
               }, 2000);
             } else if (data.body.existing === "email") {
-              setToast({ isShown: true, toastTitle: 'Error', toastMessage: data.body.message, toastType: 'fail' });
+              setToast({
+                isShown: true,
+                toastTitle: "Error",
+                toastMessage: data.body.message,
+                toastType: "fail",
+              });
               setTimeout(() => {
                 setToast({ isShown: false });
               }, 2000);
@@ -177,7 +187,9 @@ const Register = () => {
                 required
                 onChange={(e) => setUsername(e.target.value)}
               />
-              <div id="error-modal">{error?.username}</div>
+              <p className="error" id="error-modal">
+                {error?.username}
+              </p>
             </div>
             <div className="mb-3 align-content-center">
               <p>Email adress</p>
@@ -190,7 +202,9 @@ const Register = () => {
                 placeholder="email@fxtrading.com"
                 onChange={(e) => setEmail(e.target.value)}
               />
-              <div id="error-modal">{error?.email}</div>
+              <p className="error" id="error-modal">
+                {error?.email}
+              </p>
             </div>
             <div className="mb-3 align-content-center">
               <p>Password</p>
@@ -203,7 +217,9 @@ const Register = () => {
                 placeholder="Password123!"
                 onChange={(e) => setPassword(e.target.value)}
               />
-              <div id="error-modal">{error?.password}</div>
+              <p className="error" id="error-modal">
+                {error?.password}
+              </p>
             </div>
             <div className="mb-3 align-content-center">
               <p>Confirm Password</p>
@@ -216,7 +232,9 @@ const Register = () => {
                 placeholder="Password123!"
                 onChange={(e) => setConfirmPass(e.target.value)}
               />
-              <div id="error-modal">{error?.repassword}</div>
+              <p className="error" id="error-modal">
+                {error?.repassword}
+              </p>
             </div>
             <BtnsLoginRegister
               textContent={"Register"}
