@@ -154,3 +154,7 @@
 .fas.fa-exchange-alt:hover {
   cursor: pointer;
 }
+
+.username__col, .amount__col, .notional__col {
+  text-align: left;
+}

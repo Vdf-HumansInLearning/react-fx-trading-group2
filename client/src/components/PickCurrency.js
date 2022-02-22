@@ -21,12 +21,12 @@ const PickCurrency = () => {
               Primary
             </label>
             <select className="form-select" id="inputMainCurrency">
-              <option value="opt_none">Choose...</option>
-              <option value="USD">USD</option>
-              <option value="EUR">EUR</option>
-              <option value="GBP">GBP</option>
-              <option value="RON">RON</option>
-              <option value="CHF">CHF</option>
+              <option defaultValue="opt_none">Choose...</option>
+              <option defaultValue="USD">USD</option>
+              <option defaultValue="EUR">EUR</option>
+              <option defaultValue="GBP">GBP</option>
+              <option defaultValue="RON">RON</option>
+              <option defaultValue="CHF">CHF</option>
             </select>
           </div>
           <div className="input-group mb-3">
@@ -34,12 +34,12 @@ const PickCurrency = () => {
               Secondary
             </label>
             <select className="form-select" id="inputSecondCurrency">
-              <option value="opt_none">Choose...</option>
-              <option value="USD">USD</option>
-              <option value="EUR">EUR</option>
-              <option value="GBP">GBP</option>
-              <option value="RON">RON</option>
-              <option value="CHF">CHF</option>
+              <option defaultValue="opt_none">Choose...</option>
+              <option defaultValue="USD">USD</option>
+              <option defaultValue="EUR">EUR</option>
+              <option defaultValue="GBP">GBP</option>
+              <option defaultValue="RON">RON</option>
+              <option defaultValue="CHF">CHF</option>
             </select>
           </div>
         </div>

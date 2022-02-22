@@ -5,6 +5,7 @@ import WidgetPickCurrency from "./WidgetPickCurrency";
 import Toast from "./Toast";
 import WidgetMain from "./WidgetMain";
 
+let eventSource;
 class RatesView extends Component {
   constructor(props) {
     super(props);
@@ -17,12 +18,15 @@ class RatesView extends Component {
       },
       cards: [],
       cardId: 0,
+      sendSelectedCurrency: [],
       item: {
+        id: 0,
         mainCurrency: "",
         secondCurrency: "",
         sellRate: 0,
         buyRate: 0,
       },
+      eventSourceList: []
     };
 
     this.addPickWidget = this.addPickWidget.bind(this);
@@ -30,6 +34,8 @@ class RatesView extends Component {
     this.closeWidget = this.closeWidget.bind(this);
     this.selectCurrency = this.selectCurrency.bind(this);
     this.confirmSelectionCurrency = this.confirmSelectionCurrency.bind(this);
+    this.start = this.start.bind(this);
+    this.stop = this.stop.bind(this);
   }
 
   addPickWidget() {
@@ -40,7 +46,7 @@ class RatesView extends Component {
           ...cards,
           <WidgetPickCurrency
             cardIdCounter={cardId}
-            key={"key" + cardId}
+            key={"pickKey" + cardId}
             closeWidget={this.closeWidget}
             selectCurrency={this.selectCurrency}
             confirmSelectionCurrency={this.confirmSelectionCurrency}
@@ -77,10 +83,17 @@ class RatesView extends Component {
       })
     } else if (cardId.startsWith("card")) {
       let id = cardId.substring(4);
+      this.stop(id);
+      let array = [...this.state.sendSelectedCurrency];
+      let indexItem = array.findIndex(
+        (item, index) => this.state.sendSelectedCurrency[index].id == Number(id)
+      );
+
+      array.splice(indexItem, 1);
       this.setState({
-        cards: cards.filter((i) => (i.props.cardIdCounter) !== Number(id))
+        cards: cards.filter((i) => (i.props.cardIdCounter) !== Number(id)),
+        selectCurrency: array
       });
-      //stop(cardId);
     }
   }
 
@@ -126,7 +139,7 @@ class RatesView extends Component {
           ...this.state.cards,
           <WidgetMain
             cardIdCounter={cardId}
-            key={"key" + cardId}
+            key={"mainKey" + cardId}
             closeWidget={this.closeWidget}
             item={this.state.item}
           />,
@@ -225,7 +238,6 @@ class RatesView extends Component {
           base_currency: inputMainCurrency.value,
           quote_currency: inputSecondCurrency.value,
         };
-        console.log(currencyObj);
         fetch("http://localhost:8080/api/currencies/quote", {
           method: "POST",
           headers: {
@@ -243,20 +255,29 @@ class RatesView extends Component {
               console.log("asdasdas");
               this.setState({
                 item: {
+                  id: cardId,
                   mainCurrency: currencyObj.base_currency,
                   secondCurrency: currencyObj.quote_currency,
                   sellRate: response.body.sell,
                   buyRate: response.body.buy,
                 },
+                sendSelectedCurrency: [...this.state.sendSelectedCurrency, {
+                  id: cardId,
+                  mainCurrency: currencyObj.base_currency,
+                  secondCurrency: currencyObj.quote_currency,
+                  sellRate: response.body.sell,
+                  buyRate: response.body.buy,
+                }]
               });
               //create the page
+              this.closeWidget('pickCard' + cardId)
               this.addNewWidget(cardId);
-              //   start(
-              //     currencyObj.base_currency,
-              //     currencyObj.quote_currency,
-              //     inputId,
-              //     currentCardId
-              //   );
+              ;
+              this.start(
+                currencyObj.base_currency,
+                currencyObj.quote_currency,
+                cardId
+              );
             } else {
               setTimeout(() => {
                 this.setState({
@@ -285,6 +306,96 @@ class RatesView extends Component {
           },
         });
       }, 2000);
+    }
+  }
+
+  start(base_currency, quote_currency, currentCardId) {
+    console.log(base_currency, quote_currency, currentCardId)
+    const baseUrl = "http://localhost:8080/api/";
+    // when "Start" button pressed
+    if (!window.EventSource) {
+      // IE or an old browser
+      alert("The browser doesn't support EventSource.");
+      return;
+    }
+
+    eventSource = new EventSource(
+      baseUrl +
+      `currencies/quote?base_currency=${base_currency}&quote_currency=${quote_currency}`
+    );
+
+    console.log(eventSource);
+
+    this.setState({
+      eventSourceList: [...this.state.eventSourceList, {
+        id: currentCardId,
+        eventSourceObj: eventSource
+      }]
+    })
+
+    eventSource.onopen = (e) => {
+      console.log("Event: open");
+    };
+
+    eventSource.onerror = (e) => {
+      console.log("Event: error");
+      if (this.readyState === EventSource.CONNECTING) {
+        console.log(`Reconnecting (readyState=${this.readyState})...`);
+      } else {
+        console.log("Error has occurred.");
+      }
+    };
+
+    eventSource.onmessage = (e) => {
+      let currencyObj = JSON.parse(e.data);
+      console.log(currencyObj);
+      //populate the itemstop
+
+      let array = [...this.state.sendSelectedCurrency];
+      let indexItem = array.findIndex(
+        (item, index) => this.state.sendSelectedCurrency[index].id === Number(currentCardId)
+      );
+      let arrayWidget = [...this.state.cards];
+
+      array.splice(indexItem, 1, {
+        id: currentCardId,
+        buyRate: currencyObj.buy,
+        mainCurrency: base_currency,
+        secondCurrency: quote_currency,
+        sellRate: currencyObj.sell
+      });
+
+      let index1 = arrayWidget.findIndex(
+        (item, index) => arrayWidget[index].props.cardIdCounter == Number(currentCardId)
+      );
+
+      console.log(index1)
+      arrayWidget.splice(
+        index1,
+        1,
+        <WidgetMain
+          cardIdCounter={currentCardId}
+          key={"mainKey" + currentCardId}
+          closeWidget={this.closeWidget}
+          item={this.state.sendSelectedCurrency[indexItem]}
+        />
+      );
+
+      this.setState({
+        sendSelectedCurrency: array,
+        cards: arrayWidget
+      });
+    };
+  }
+
+  stop(eventSourceId) {
+    // when "Stop" button pressed
+    if (eventSource) {
+      let eventSourceIndex = this.state.eventSourceList.findIndex(
+        (item) => item.id == eventSourceId
+      );
+      let foundEventSource = this.state.eventSourceList.splice(eventSourceIndex, 1);
+      foundEventSource[0].eventSourceObj.close();
     }
   }
 
