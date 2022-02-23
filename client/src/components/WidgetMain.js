@@ -1,7 +1,13 @@
 import React from "react";
 import "../styles/style-index.css";
 
-const WidgetMain = ({ cardIdCounter, item, closeWidget, swapCurrencies }) => {
+const WidgetMain = ({
+  cardIdCounter,
+  item,
+  closeWidget,
+  swapCurrencies,
+  sendDataTransactions,
+}) => {
   return (
     <div className="col" id={`card${cardIdCounter}`}>
       <div className="card">
@@ -25,7 +31,11 @@ const WidgetMain = ({ cardIdCounter, item, closeWidget, swapCurrencies }) => {
               </span>
             </p>
             <div className="icon-exchange">
-              <i className="fas fa-exchange-alt" id={`swap${cardIdCounter}`} onClick={() => swapCurrencies(cardIdCounter)}></i>
+              <i
+                className="fas fa-exchange-alt"
+                id={`swap${cardIdCounter}`}
+                onClick={() => swapCurrencies(cardIdCounter)}
+              ></i>
             </div>
           </div>
           <button
@@ -46,7 +56,10 @@ const WidgetMain = ({ cardIdCounter, item, closeWidget, swapCurrencies }) => {
               {item.sellRate}
             </span>
             <span className="icon-up">
-              <i className="fas fa-caret-up" id={`iconDown${cardIdCounter}`}></i>
+              <i
+                className="fas fa-caret-up"
+                id={`iconDown${cardIdCounter}`}
+              ></i>
             </span>
           </p>
           <p className="subtitle mb-0">
@@ -59,7 +72,10 @@ const WidgetMain = ({ cardIdCounter, item, closeWidget, swapCurrencies }) => {
               {item.buyRate}
             </span>
             <span className="icon-down">
-              <i className="fas fa-caret-down" id={`iconUp${cardIdCounter}`}></i>
+              <i
+                className="fas fa-caret-down"
+                id={`iconUp${cardIdCounter}`}
+              ></i>
             </span>
           </p>
         </div>
@@ -77,7 +93,10 @@ const WidgetMain = ({ cardIdCounter, item, closeWidget, swapCurrencies }) => {
             ></input>
           </div>
           <div className="input-group mb-3">
-            <label className="input-group-text" htmlFor={`inputCcy${cardIdCounter}`}>
+            <label
+              className="input-group-text"
+              htmlFor={`inputCcy${cardIdCounter}`}
+            >
               Tenor
             </label>
             <select className="form-select" id={`inputCcy${cardIdCounter}`}>
@@ -91,15 +110,43 @@ const WidgetMain = ({ cardIdCounter, item, closeWidget, swapCurrencies }) => {
           </div>
         </div>
         <div className="card-actions px-3 d-flex justify-content-between">
-          <button className="btn btn-success" type="button" id="sellBtn">
+          <button
+            className="btn btn-success"
+            type="button"
+            id="sellBtn"
+            onClick={() =>
+              sendDataTransactions(
+                "sell",
+                `mainCurrency${cardIdCounter}`,
+                `secondCurrency${cardIdCounter}`,
+                `sellRate${cardIdCounter}`,
+                `inputDate${cardIdCounter}`,
+                `inputCcy${cardIdCounter}`
+              )
+            }
+          >
             Sell
           </button>
-          <button className="btn btn-primary" type="button" id="buyBtn">
+          <button
+            className="btn btn-primary"
+            type="button"
+            id="buyBtn"
+            onClick={() =>
+              sendDataTransactions(
+                "buy",
+                `mainCurrency${cardIdCounter}`,
+                `secondCurrency${cardIdCounter}`,
+                `buyRate${cardIdCounter}`,
+                `inputDate${cardIdCounter}`,
+                `inputCcy${cardIdCounter}`
+              )
+            }
+          >
             Buy
           </button>
         </div>
       </div>
-    </div >
+    </div>
   );
 };
 
