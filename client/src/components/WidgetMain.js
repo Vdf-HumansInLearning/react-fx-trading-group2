@@ -7,6 +7,8 @@ const WidgetMain = ({
   closeWidget,
   swapCurrencies,
   sendDataTransactions,
+  iconSell,
+  iconBuy,
 }) => {
   return (
     <div className="col" id={`card${cardIdCounter}`}>
@@ -55,9 +57,9 @@ const WidgetMain = ({
             >
               {item.sellRate}
             </span>
-            <span className="icon-up">
+            <span className={`icon-${iconSell}`}>
               <i
-                className="fas fa-caret-up"
+                className={`fas fa-caret-${iconSell}`}
                 id={`iconDown${cardIdCounter}`}
               ></i>
             </span>
@@ -71,9 +73,9 @@ const WidgetMain = ({
             >
               {item.buyRate}
             </span>
-            <span className="icon-down">
+            <span className={`icon-${iconBuy}`}>
               <i
-                className="fas fa-caret-down"
+                className={`fas fa-caret-${iconBuy}`}
                 id={`iconUp${cardIdCounter}`}
               ></i>
             </span>
@@ -103,9 +105,9 @@ const WidgetMain = ({
               <option value={true} id="optionDefault">
                 Choose...
               </option>
-              <option defaultValue="Spot">Spot</option>
-              <option defaultValue="1M">1 Month</option>
-              <option defaultValue="3M">3 Month</option>
+              <option value="Spot">Spot</option>
+              <option value="1M">1 Month</option>
+              <option value="3M">3 Month</option>
             </select>
           </div>
         </div>

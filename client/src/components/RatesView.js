@@ -138,6 +138,9 @@ class RatesView extends Component {
 
     let indexCard = list.findIndex((i) => i.id == Number(cardId));
 
+    // let initialSellRate = this.state.mainWidgetItems[indexCard].sellRate;
+    // let initialBuyRate = this.state.mainWidgetItems[indexCard].buyRate;
+
     list.splice(indexCard, 1, {
       id: cardId,
       buyRate: list[indexCard].sellRate,
@@ -160,6 +163,8 @@ class RatesView extends Component {
         item={list[indexCard]}
         swapCurrencies={this.swapCurrencies}
         sendDataTransactions={this.sendDataTransactions}
+        // iconSell={initialSellRate > list[indexCard].sellRate ? "up" : "down"}
+        // iconBuy={initialBuyRate > list[indexCard].buyRate ? "up" : "down"}
       />
     );
 
@@ -189,10 +194,11 @@ class RatesView extends Component {
             item={this.state.item}
             swapCurrencies={this.swapCurrencies}
             sendDataTransactions={this.sendDataTransactions}
+            iconSell={"down"}
+            iconBuy={"up"}
           />,
         ],
       });
-
       this.setState({ cardId: this.state.cardId + 1 });
     } else {
       this.setState({
@@ -570,6 +576,9 @@ class RatesView extends Component {
       );
       let arrayWidget = [...this.state.cards];
 
+      let initialSellRate = this.state.mainWidgetItems[indexItem].sellRate;
+      let initialBuyRate = this.state.mainWidgetItems[indexItem].buyRate;
+
       array.splice(indexItem, 1, {
         id: currentCardId,
         buyRate: currencyObj.buy,
@@ -593,6 +602,8 @@ class RatesView extends Component {
           item={this.state.mainWidgetItems[indexItem]}
           swapCurrencies={this.swapCurrencies}
           sendDataTransactions={this.sendDataTransactions}
+          iconSell={initialSellRate < currencyObj.sell ? "up" : "down"}
+          iconBuy={initialBuyRate < currencyObj.buy ? "up" : "down"}
         />
       );
 
