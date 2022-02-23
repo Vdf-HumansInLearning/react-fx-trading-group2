@@ -4,24 +4,23 @@ import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import NotFound from "./pages/NotFound";
-import Cookies from 'js-cookie';
+import ProtectedRoutes from "./pages/ProtectedRoutes";
+import ProtectedLogin from "./pages/ProtectedLogin";
 
 function App() {
-
-  let isUserLogged = Cookies.get('username');
-  //TO DO: dont show dashboard if the user is not logged in
-  // {
-  //   isUserLogged
-  //     ? <Route path="/dashboard" element={<Dashboard />} />
-  //     : <Route path="/login" element={<Login />} />
-  // }
-
   return (
     <div className="App">
       <Routes>
-        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/" element={<Login />} />
-        <Route path="/login" element={<Login />} />
+
+        <Route element={<ProtectedLogin />}>
+          <Route path="/login" element={<Login />} />
+        </Route>
+
+        <Route element={<ProtectedRoutes />}>
+          <Route path="/dashboard" element={<Dashboard />} />
+        </Route>
+
         <Route path="/register" element={<Register />} />
         <Route path="*" element={<NotFound />} />
       </Routes>

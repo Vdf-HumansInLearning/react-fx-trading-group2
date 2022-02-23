@@ -5,7 +5,7 @@ import BtnsLoginRegister from "../components/BtnsLoginRegister";
 import Toast from "../components/Toast";
 import "../styles/style-auth.css";
 
-const Login = () => {
+const Login = ({ dashboardWarning }) => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -15,6 +15,19 @@ const Login = () => {
     toastMessage: "",
     toastType: "success",
   });
+
+  if (dashboardWarning === true) {
+    setToast({
+      isShown: true,
+      toastTitle: "Warning",
+      toastMessage: "You must be logged in to see this page!",
+      toastType: "warning",
+    });
+    setTimeout(() => {
+      setToast({ isShown: false });
+    }, 2000);
+  }
+
 
   const createCookie = (name, value, days) => {
     var date, expires;
@@ -26,7 +39,7 @@ const Login = () => {
       expires = "";
     }
     document.cookie = name + "=" + value + expires;
-  }
+  };
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -47,7 +60,7 @@ const Login = () => {
       .then((response) => {
         let username = response.body.username;
         if (response.status === 200) {
-          createCookie("username", username, 2)
+          createCookie("username", username, 2);
           setToast({
             isShown: true,
             toastTitle: "Login successful",

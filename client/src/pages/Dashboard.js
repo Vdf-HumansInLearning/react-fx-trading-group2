@@ -6,12 +6,18 @@ import Navbar from "./../components/Navbar";
 import Toast from "../components/Toast";
 import useFetch from "../components/UseFetch";
 
-import '../styles/style-index.css'
+import "../styles/style-index.css";
 
 function Dashboard() {
+  const {
+    data: trans,
+    error,
+    isPending,
+  } = useFetch(`http://localhost:8080/api/transactions`);
 
-  const { data: trans, error, isPending } = useFetch(`http://localhost:8080/api/transactions`);
-  const { data: currencies } = useFetch(`http://localhost:8080/api/currencies/pairs`);
+  const { data: currencies } = useFetch(
+    `http://localhost:8080/api/currencies/pairs`
+  );
 
   const navigate = useNavigate();
   const [toast, setToast] = useState({
@@ -32,7 +38,19 @@ function Dashboard() {
     setTimeout(() => {
       navigate("/login");
     }, 3000);
-  }
+  };
+
+  // if (loginWarning === true) {
+  //   setToast({
+  //     isShown: true,
+  //     toastTitle: "Warning",
+  //     toastMessage: "You are already logged in!",
+  //     toastType: "warning",
+  //   });
+  //   setTimeout(() => {
+  //     setToast({ isShown: false });
+  //   }, 2000);
+  // }
 
   return (
     <>
@@ -48,9 +66,7 @@ function Dashboard() {
           <RatesView />
           {isPending && <div>Loading...</div>}
           {error && <div>{error}</div>}
-          {trans &&
-            < Table trans={trans} currencies={currencies} />
-          }
+          {trans && <Table trans={trans} currencies={currencies} />}
         </main>
       </div>
     </>

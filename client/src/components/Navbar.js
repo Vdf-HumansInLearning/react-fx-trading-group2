@@ -1,6 +1,7 @@
+import Cookies from "js-cookie";
 import React from "react";
 
-function Navbar({ clearCookiesOnLogout }) {
+function Navbar({ clearCookiesOnLogout, Auth }) {
   return (
     <>
       <nav className="navbar navbar-light bg-light mb-3">
@@ -15,7 +16,10 @@ function Navbar({ clearCookiesOnLogout }) {
         <button
           className="btn btn-outline-secondary"
           id="logoutBtn"
-          onClick={() => clearCookiesOnLogout('username')}
+          onClick={() => {
+            clearCookiesOnLogout("username");
+            Cookies.remove("username");
+          }}
         >
           Logout
         </button>
