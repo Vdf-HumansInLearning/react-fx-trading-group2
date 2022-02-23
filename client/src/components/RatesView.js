@@ -188,6 +188,7 @@ class RatesView extends Component {
             closeWidget={this.closeWidget}
             item={this.state.item}
             swapCurrencies={this.swapCurrencies}
+            sendDataTransactions={this.sendDataTransactions}
           />,
         ],
       });
@@ -321,16 +322,16 @@ class RatesView extends Component {
   ) {
     let notional = document.getElementById(inputIdtoSendNotional).value;
     let tenor = document.getElementById(inputIdToSendTenor).value;
-    let mainCurrencyToSend = document
-      .getElementById(sendMainCurrency)
-      .getAttribute("value");
-    let secondCurrencyToSend = document
-      .getElementById(sendSecCurrency)
-      .getAttribute("value");
+    // let mainCurrencyToSend =
+    //   document.getElementById(sendMainCurrency).defaultValue;
+    // let secondCurrencyToSend =
+    //   document.getElementById(sendSecCurrency).defaultValue;
 
-    let sellOrBuyRateToSend = document
-      .getElementById(sellOrBuyRate)
-      .getAttribute("value");
+    // let sellOrBuyRateToSend =
+    //   document.getElementById(sellOrBuyRate).defaultValue;
+    let mainCurrencyToSend = sendMainCurrency;
+    let secondCurrencyToSend = sendSecCurrency;
+    let sellOrBuyRateToSend = sellOrBuyRate;
 
     let userName = Cookies.get("username");
 
@@ -591,6 +592,7 @@ class RatesView extends Component {
           closeWidget={this.closeWidget}
           item={this.state.mainWidgetItems[indexItem]}
           swapCurrencies={this.swapCurrencies}
+          sendDataTransactions={this.sendDataTransactions}
         />
       );
 

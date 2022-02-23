@@ -117,9 +117,9 @@ const WidgetMain = ({
             onClick={() =>
               sendDataTransactions(
                 "sell",
-                `mainCurrency${cardIdCounter}`,
-                `secondCurrency${cardIdCounter}`,
-                `sellRate${cardIdCounter}`,
+                item.mainCurrency,
+                item.secondCurrency,
+                item.sellRate,
                 `inputDate${cardIdCounter}`,
                 `inputCcy${cardIdCounter}`
               )
@@ -134,9 +134,9 @@ const WidgetMain = ({
             onClick={() =>
               sendDataTransactions(
                 "buy",
-                `mainCurrency${cardIdCounter}`,
-                `secondCurrency${cardIdCounter}`,
-                `buyRate${cardIdCounter}`,
+                item.mainCurrency,
+                item.secondCurrency,
+                item.buyRate,
                 `inputDate${cardIdCounter}`,
                 `inputCcy${cardIdCounter}`
               )
