@@ -230,6 +230,28 @@
       "tenor": "3M",
       "trans_date": "21/01/2022",
       "trans_hour": "13:39"
+    },
+    {
+      "id": "edf640e7-690a-43ea-af7b-385db16760c5",
+      "username": "Yasmine Dennis",
+      "ccy_pair": "USD/GBP",
+      "rate": "1.32",
+      "action": "buy",
+      "notional": "22",
+      "tenor": "Spot",
+      "trans_date": "24/02/2022",
+      "trans_hour": "15:07"
+    },
+    {
+      "id": "741575a7-185f-4ae3-9891-9574488f1f8b",
+      "username": "Yasmine Dennis",
+      "ccy_pair": "USD/GBP",
+      "rate": "1.26",
+      "action": "buy",
+      "notional": "2222",
+      "tenor": "Spot",
+      "trans_date": "24/02/2022",
+      "trans_hour": "15:10"
     }
   ]
 }

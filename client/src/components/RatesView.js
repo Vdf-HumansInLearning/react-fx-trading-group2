@@ -17,6 +17,11 @@ class RatesView extends Component {
         toastMessage: "",
         toastType: "success",
       },
+      card: null,
+      inputMainCurrency: null,
+      inputSecondCurrency: null,
+      notional: null,
+      tenor: null,
       cards: [],
       cardId: 0,
       mainWidgetItems: [],
@@ -28,6 +33,7 @@ class RatesView extends Component {
         buyRate: 0,
       },
       eventSourceList: [],
+      trans: props.trans
     };
 
     this.addPickWidget = this.addPickWidget.bind(this);
@@ -39,6 +45,10 @@ class RatesView extends Component {
     this.sendDataTransactions = this.sendDataTransactions.bind(this);
     this.start = this.start.bind(this);
     this.stop = this.stop.bind(this);
+    this.handleMainCurrency = this.handleMainCurrency.bind(this);
+    this.handleSecondCurrency = this.handleSecondCurrency.bind(this);
+    this.handleNotional = this.handleNotional.bind(this);
+    this.handleTenor = this.handleTenor.bind(this);
   }
 
   addPickWidget() {
@@ -53,6 +63,10 @@ class RatesView extends Component {
             closeWidget={this.closeWidget}
             selectCurrency={this.selectCurrency}
             confirmSelectionCurrency={this.confirmSelectionCurrency}
+            handleMainCurrency={this.handleMainCurrency}
+            handleSecondCurrency={this.handleSecondCurrency}
+            handleNotional={this.handleNotional}
+            handleTenor={this.handleTenor}
           />,
         ],
       });
@@ -99,19 +113,35 @@ class RatesView extends Component {
     }
   }
 
+  handleMainCurrency(e) {
+    this.setState({ inputMainCurrency: e.target.value })
+  }
+
+  handleSecondCurrency(e) {
+    this.setState({ inputSecondCurrency: e.target.value })
+  }
+
+  handleNotional(e) {
+    this.setState({ notional: e.target.value })
+  }
+
+  handleTenor(e) {
+    this.setState({ tenor: e.target.value })
+  }
+
   selectCurrency(cardId) {
     let card = document.getElementById(cardId);
-    let inputMainCurrency = card.querySelector("#inputMainCurrency");
-    let inputSecondCurrency = card.querySelector("#inputSecondCurrency");
     let btn_confirm_selection = card.querySelector("#btn_confirm_selection");
+
     btn_confirm_selection.disabled = false;
-    if (inputMainCurrency && inputSecondCurrency)
+
+    if (this.state.inputMainCurrency && this.state.inputSecondCurrency)
       if (
-        inputMainCurrency.value !== "opt_none" ||
-        inputSecondCurrency.value !== "opt_none"
+        this.state.inputMainCurrency !== "opt_none" ||
+        this.state.inputSecondCurrency !== "opt_none"
       ) {
         //user must choose two different currencies
-        if (inputMainCurrency.value === inputSecondCurrency.value) {
+        if (this.state.inputMainCurrency === this.state.inputSecondCurrency) {
           this.setState({
             toast: {
               isShown: true,
@@ -167,6 +197,10 @@ class RatesView extends Component {
           item={item}
           swapCurrencies={this.swapCurrencies}
           sendDataTransactions={this.sendDataTransactions}
+          iconSell={"down"}
+          iconBuy={"up"}
+          handleNotional={this.handleNotional}
+          handleTenor={this.handleTenor}
         />
       );
     }
@@ -175,6 +209,7 @@ class RatesView extends Component {
       cards: allCards,
     });
   }
+
   addNewWidget(cardId) {
     //no more that 5 cards
     if (this.state.cards.length < 5) {
@@ -191,6 +226,8 @@ class RatesView extends Component {
             sendDataTransactions={this.sendDataTransactions}
             iconSell={"down"}
             iconBuy={"up"}
+            handleNotional={this.handleNotional}
+            handleTenor={this.handleTenor}
           />,
         ],
       });
@@ -215,17 +252,13 @@ class RatesView extends Component {
   }
 
   confirmSelectionCurrency(cardId) {
-    let card = document.getElementById("pickCard" + cardId);
-    let inputMainCurrency = card.querySelector("#inputMainCurrency");
-    let inputSecondCurrency = card.querySelector("#inputSecondCurrency");
-
     if (
-      inputMainCurrency.value &&
-      inputSecondCurrency.value &&
-      inputMainCurrency.value !== "opt_none" &&
-      inputSecondCurrency.value !== "opt_none"
+      this.state.inputMainCurrency &&
+      this.state.inputSecondCurrency &&
+      this.state.inputMainCurrency !== "opt_none" &&
+      this.state.inputSecondCurrency !== "opt_none"
     ) {
-      if (inputMainCurrency.value == inputSecondCurrency.value) {
+      if (this.state.inputMainCurrency == this.state.inputSecondCurrency) {
         setTimeout(() => {
           this.setState({
             toast: {
@@ -238,8 +271,8 @@ class RatesView extends Component {
         }, 2000);
       } else {
         let currencyObj = {
-          base_currency: inputMainCurrency.value,
-          quote_currency: inputSecondCurrency.value,
+          base_currency: this.state.inputMainCurrency,
+          quote_currency: this.state.inputSecondCurrency,
         };
         fetch("http://localhost:8080/api/currencies/quote", {
           method: "POST",
@@ -321,15 +354,13 @@ class RatesView extends Component {
     inputIdtoSendNotional,
     inputIdToSendTenor
   ) {
-    let notional = document.getElementById(inputIdtoSendNotional).value;
-    let tenor = document.getElementById(inputIdToSendTenor).value;
     let mainCurrencyToSend = sendMainCurrency;
     let secondCurrencyToSend = sendSecCurrency;
     let sellOrBuyRateToSend = sellOrBuyRate;
 
     let userName = Cookies.get("username");
 
-    if (tenor !== "Choose..." && notional >= 1) {
+    if (this.state.tenor !== "Choose..." && this.state.notional >= 1) {
       let actionSellOrBuy = action;
       const monthNames = [
         "01",
@@ -371,8 +402,8 @@ class RatesView extends Component {
           ccy_pair: `${mainCurrencyToSend}/${secondCurrencyToSend}`,
           rate: sellOrBuyRateToSend,
           action: actionSellOrBuy,
-          notional: notional,
-          tenor: tenor,
+          notional: this.state.notional,
+          tenor: this.state.tenor,
           trans_date: outputDate,
           trans_hour: time,
         }),
@@ -402,6 +433,7 @@ class RatesView extends Component {
             document.getElementById(inputIdtoSendNotional).value = null;
             document.getElementById(inputIdToSendTenor).value =
               document.getElementById(inputIdToSendTenor).options[0].value;
+
           } else {
             this.setState({
               toast: {
@@ -419,34 +451,22 @@ class RatesView extends Component {
               });
             }, 2000);
           }
-        });
+        })
       // .then(
-      //   fetch(url, {
+      //   fetch("http://localhost:8080/api/transactions", {
       //     method: "GET",
       //     headers: {
       //       "Content-Type": "application/json",
       //     },
       //   }).then((res) =>
       //     res.json().then((data) => {
-      //       tableRegistrations = data;
-      //       const tableBody = document.getElementById("table-body");
-      //       if (tableBody) {
-      //         cleanup(tableBody);
-      //       }
-      //       for (let i = 0; i < tableRegistrations.length; i++) {
-      //         const registration = createOneTableRegistration(
-      //           tableRegistrations[i],
-      //           i + 1
-      //         );
-      //         tableBody.appendChild(registration);
-      //       }
+      //       this.setState({ trans: data })
       //     })
-      //   )
+      //   ).catch((error) => {
+      //     console.log(error);
+      //   })
       // )
-      // .catch((error) => {
-      //   console.log(error);
-      // });
-    } else if (notional && tenor === "Choose...") {
+    } else if (this.state.notional && this.state.tenor === "Choose...") {
       this.setState({
         toast: {
           isShown: true,
@@ -462,7 +482,7 @@ class RatesView extends Component {
           },
         });
       }, 2000);
-    } else if (!notional && tenor !== "Choose...") {
+    } else if (!this.state.notional && this.state.tenor !== "Choose...") {
       this.setState({
         toast: {
           isShown: true,
@@ -478,7 +498,7 @@ class RatesView extends Component {
           },
         });
       }, 2000);
-    } else if (!notional && tenor === "Choose...") {
+    } else if (!this.state.notional && this.state.tenor === "Choose...") {
       this.setState({
         toast: {
           isShown: true,
@@ -494,7 +514,7 @@ class RatesView extends Component {
           },
         });
       }, 2000);
-    } else if (notional <= 1) {
+    } else if (this.state.notional <= 1) {
       this.setState({
         toast: {
           isShown: true,
@@ -564,8 +584,8 @@ class RatesView extends Component {
       );
       let arrayWidget = [...this.state.cards];
 
-      let initialSellRate = this.state.mainWidgetItems[indexItem].sellRate;
-      let initialBuyRate = this.state.mainWidgetItems[indexItem].buyRate;
+      let initialSellRate = array[indexItem].sellRate;
+      let initialBuyRate = array[indexItem].buyRate;
 
       array.splice(indexItem, 1, {
         id: currentCardId,
@@ -592,6 +612,8 @@ class RatesView extends Component {
           sendDataTransactions={this.sendDataTransactions}
           iconSell={initialSellRate < currencyObj.sell ? "up" : "down"}
           iconBuy={initialBuyRate < currencyObj.buy ? "up" : "down"}
+          handleNotional={this.handleNotional}
+          handleTenor={this.handleTenor}
         />
       );
 

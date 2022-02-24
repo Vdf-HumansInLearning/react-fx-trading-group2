@@ -7,6 +7,8 @@ const WidgetPickCurrency = ({
   closeWidget,
   selectCurrency,
   confirmSelectionCurrency,
+  handleMainCurrency,
+  handleSecondCurrency,
 }) => {
   const { data: currenciesAvailable } = useFetch(
     "http://localhost:8080/api/currencies"
@@ -31,7 +33,7 @@ const WidgetPickCurrency = ({
             <label className="input-group-text" htmlFor="inputMainCurrency">
               Primary
             </label>
-            <select className="form-select" id="inputMainCurrency">
+            <select className="form-select" name="inputMainCurrency" id="inputMainCurrency" onChange={handleMainCurrency}>
               <option defaultValue="opt_none">Choose...</option>
               {currenciesAvailable &&
                 currenciesAvailable.map((i) => (
@@ -48,7 +50,9 @@ const WidgetPickCurrency = ({
             <select
               className="form-select"
               id="inputSecondCurrency"
-              onChange={() => selectCurrency(`pickCard${cardIdCounter}`)}
+              name="inputSecondCurrency"
+              onClick={() => { selectCurrency(`pickCard${cardIdCounter}`) }}
+              onChange={handleSecondCurrency}
             >
               <option defaultValue="opt_none">Choose...</option>
               {currenciesAvailable &&

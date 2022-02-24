@@ -9,6 +9,8 @@ const WidgetMain = ({
   sendDataTransactions,
   iconSell,
   iconBuy,
+  handleNotional,
+  handleTenor
 }) => {
   return (
     <div className="col" id={`card${cardIdCounter}`}>
@@ -90,7 +92,9 @@ const WidgetMain = ({
               className="form-control"
               type="number"
               id={`inputDate${cardIdCounter}`}
+              name="dateInput"
               placeholder="Amount"
+              onChange={handleNotional}
               min="1"
             ></input>
           </div>
@@ -101,7 +105,7 @@ const WidgetMain = ({
             >
               Tenor
             </label>
-            <select className="form-select" id={`inputCcy${cardIdCounter}`}>
+            <select className="form-select" id={`inputCcy${cardIdCounter}`} onChange={handleTenor}>
               <option value={true} id="optionDefault">
                 Choose...
               </option>

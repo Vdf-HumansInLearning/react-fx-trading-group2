@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Table from "../components/Table";
 import RatesView from "../components/RatesView";
@@ -9,11 +9,6 @@ import useFetch from "../components/UseFetch";
 import "../styles/style-index.css";
 
 function Dashboard() {
-  const {
-    data: trans,
-    error,
-    isPending,
-  } = useFetch(`http://localhost:8080/api/transactions`);
 
   const { data: currencies } = useFetch(
     `http://localhost:8080/api/currencies/pairs`
@@ -27,6 +22,7 @@ function Dashboard() {
     toastType: "success",
   });
 
+  const [trans, setTrans] = useState([])
   const clearCookiesOnLogout = (name) => {
     document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:01 GMT;";
     setToast({
@@ -40,17 +36,26 @@ function Dashboard() {
     }, 3000);
   };
 
-  // if (loginWarning === true) {
-  //   setToast({
-  //     isShown: true,
-  //     toastTitle: "Warning",
-  //     toastMessage: "You are already logged in!",
-  //     toastType: "warning",
-  //   });
-  //   setTimeout(() => {
-  //     setToast({ isShown: false });
-  //   }, 2000);
-  // }
+
+  useEffect(() => {
+    getTransactions();
+  }, [trans])
+
+  const getTransactions = () => {
+    let url = "http://localhost:8080/api/transactions";
+    fetch(url)
+      .then((res) =>
+        res.json().then((data) => ({ status: res.status, body: data }))
+      )
+      .then((response) => {
+        if (response.status === 200) {
+          setTrans(response.body);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
 
   return (
     <>
@@ -63,10 +68,10 @@ function Dashboard() {
       <div id="app">
         <Navbar clearCookiesOnLogout={clearCookiesOnLogout} />
         <main className="container-fluid row mb-5">
-          <RatesView />
-          {isPending && <div>Loading...</div>}
-          {error && <div>{error}</div>}
-          {trans && <Table trans={trans} currencies={currencies} />}
+          <RatesView trans={trans} />
+          {/* {isPending && <div>Loading...</div>}
+          {error && <div>{error}</div>} */}
+          {trans.length > 0 && currencies && <Table trans={trans} currencies={currencies} />}
         </main>
       </div>
     </>

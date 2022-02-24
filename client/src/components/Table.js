@@ -23,6 +23,7 @@ class Table extends Component {
                 toastMessage: "",
                 toastType: "success",
             },
+            inputCcy: null,
             transactions: props.trans,
             registartions: props.trans,
             currentSelectionTable: []
@@ -30,8 +31,10 @@ class Table extends Component {
         this.sortEntries = this.sortEntries.bind(this);
         this.parseDates = this.parseDates.bind(this);
         this.filterBlotterTable = this.filterBlotterTable.bind(this);
+        this.handleInputCcy = this.handleInputCcy.bind(this);
 
         this.setState({ currencies: props.currencies })
+
     }
 
     sortEntries(property, sortType) {
@@ -128,15 +131,18 @@ class Table extends Component {
         };
     }
 
+    handleInputCcy(e) {
+        this.setState({ inputCcy: e.target.value })
+    }
+
     filterBlotterTable() {
-        const inputCcy = document.getElementById("inputCcy").value;
         let selectedDate = document.getElementById("inputDateFilter").value;
         let dateArray = selectedDate.split("-").reverse();
         selectedDate = dateArray.join("/");
         let currentSelectionTable = this.state.registartions;
 
         //ccy input and date input exist
-        if (inputCcy !== "opt_none" && selectedDate.length !== 0) {
+        if (this.state.inputCcy !== "opt_none" && selectedDate.length !== 0) {
             const selectedPair = document.getElementById("inputCcy").value;
             currentSelectionTable = currentSelectionTable
                 .filter((i) => i.ccy_pair === selectedPair)
@@ -150,11 +156,18 @@ class Table extends Component {
                         toastType: "fail"
                     }
                 });
+                setTimeout(() => {
+                    this.setState({
+                        toast: {
+                            isShown: false
+                        }
+                    })
+                }, 2000)
             }
 
         }
         //ccy input exists but date input doesn`t
-        else if (inputCcy !== "opt_none" && selectedDate.length === 0) {
+        else if (this.state.inputCcy !== "opt_none" && selectedDate.length === 0) {
             const selectedPair = document.getElementById("inputCcy").value;
             currentSelectionTable = currentSelectionTable
                 .filter((i) => i.ccy_pair === selectedPair);
@@ -167,11 +180,18 @@ class Table extends Component {
                         toastType: "fail"
                     }
                 });
+                setTimeout(() => {
+                    this.setState({
+                        toast: {
+                            isShown: false
+                        }
+                    })
+                }, 2000)
             }
 
         }
         //date input exists but ccy input doesn`t
-        else if (inputCcy === "opt_none" && selectedDate.length !== 0) {
+        else if (this.state.inputCcy === "opt_none" && selectedDate.length !== 0) {
             currentSelectionTable = currentSelectionTable.filter((i) =>
                 i.trans_date.startsWith(selectedDate)
             );
@@ -184,6 +204,13 @@ class Table extends Component {
                         toastType: "fail"
                     }
                 });
+                setTimeout(() => {
+                    this.setState({
+                        toast: {
+                            isShown: false
+                        }
+                    })
+                }, 2000)
             }
         }
         this.setState({ transactions: currentSelectionTable })
@@ -205,7 +232,7 @@ class Table extends Component {
                     <div className="vertical-line"></div>
                     <div className="row">
                         {this.props.currencies && (
-                            <CurrenciesPairs currencies={this.props.currencies} filterBlotterTable={this.filterBlotterTable} />
+                            <CurrenciesPairs currencies={this.props.currencies} filterBlotterTable={this.filterBlotterTable} handleInputCcy={this.handleInputCcy} />
                         )}
                     </div>
                 </div>

@@ -31,7 +31,7 @@ const useFetch = (url) => {
 
         return () => abordCont.abort();
 
-    }, [url]);
+    }, [url, data]);
 
     return {
         data, isPeding, error
