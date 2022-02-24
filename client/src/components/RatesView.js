@@ -138,48 +138,43 @@ class RatesView extends Component {
 
     let indexCard = list.findIndex((i) => i.id == Number(cardId));
 
-    // let initialSellRate = this.state.mainWidgetItems[indexCard].sellRate;
-    // let initialBuyRate = this.state.mainWidgetItems[indexCard].buyRate;
-
-    list.splice(indexCard, 1, {
+    let item = {
       id: cardId,
       buyRate: list[indexCard].sellRate,
       mainCurrency: list[indexCard].secondCurrency,
       secondCurrency: list[indexCard].mainCurrency,
       sellRate: list[indexCard].buyRate,
-    });
+    }
+
+    list.splice(indexCard, 1, item);
+
+    this.setState({
+      mainWidgetItems: list
+    })
 
     let index = allCards.findIndex(
       (i) => i.props.cardIdCounter == Number(cardId)
     );
-    console.log(index);
-    allCards.splice(
-      index,
-      1,
-      <WidgetMain
-        cardIdCounter={cardId}
-        key={"mainKey" + cardId}
-        closeWidget={this.closeWidget}
-        item={list[indexCard]}
-        swapCurrencies={this.swapCurrencies}
-        sendDataTransactions={this.sendDataTransactions}
-        // iconSell={initialSellRate > list[indexCard].sellRate ? "up" : "down"}
-        // iconBuy={initialBuyRate > list[indexCard].buyRate ? "up" : "down"}
-      />
-    );
 
+    if (index >= 0) {
+      allCards.splice(
+        index,
+        1,
+        <WidgetMain
+          cardIdCounter={cardId}
+          key={"mainKey" + cardId}
+          closeWidget={this.closeWidget}
+          item={item}
+          swapCurrencies={this.swapCurrencies}
+          sendDataTransactions={this.sendDataTransactions}
+        />
+      );
+    }
     this.setState({
       mainWidgetItems: list,
       cards: allCards,
     });
-    this.stop(cardId);
-    this.start(
-      list[indexCard].mainCurrency,
-      list[indexCard].secondCurrency,
-      cardId
-    );
   }
-
   addNewWidget(cardId) {
     //no more that 5 cards
     if (this.state.cards.length < 5) {
@@ -328,13 +323,6 @@ class RatesView extends Component {
   ) {
     let notional = document.getElementById(inputIdtoSendNotional).value;
     let tenor = document.getElementById(inputIdToSendTenor).value;
-    // let mainCurrencyToSend =
-    //   document.getElementById(sendMainCurrency).defaultValue;
-    // let secondCurrencyToSend =
-    //   document.getElementById(sendSecCurrency).defaultValue;
-
-    // let sellOrBuyRateToSend =
-    //   document.getElementById(sellOrBuyRate).defaultValue;
     let mainCurrencyToSend = sendMainCurrency;
     let secondCurrencyToSend = sendSecCurrency;
     let sellOrBuyRateToSend = sellOrBuyRate;
@@ -537,7 +525,7 @@ class RatesView extends Component {
 
     eventSource = new EventSource(
       baseUrl +
-        `currencies/quote?base_currency=${base_currency}&quote_currency=${quote_currency}`
+      `currencies/quote?base_currency=${base_currency}&quote_currency=${quote_currency}`
     );
     console.log(eventSource);
 
@@ -582,8 +570,8 @@ class RatesView extends Component {
       array.splice(indexItem, 1, {
         id: currentCardId,
         buyRate: currencyObj.buy,
-        mainCurrency: base_currency,
-        secondCurrency: quote_currency,
+        mainCurrency: array[indexItem].mainCurrency,
+        secondCurrency: array[indexItem].secondCurrency,
         sellRate: currencyObj.sell,
       });
 

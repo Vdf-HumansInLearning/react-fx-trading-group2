@@ -11,7 +11,7 @@ function App() {
   return (
     <div className="App">
       <Routes>
-        <Route path="/" element={<Login />} />
+        <Route path="/" element={<Navigate replace to="/login" />} />
 
         <Route element={<ProtectedLogin />}>
           <Route path="/login" element={<Login />} />
