@@ -23,18 +23,23 @@ class Table extends Component {
                 toastMessage: "",
                 toastType: "success",
             },
-            inputCcy: null,
+            inputCcy: "Choose...",
             transactions: props.trans,
             registartions: props.trans,
             currentSelectionTable: []
         };
+
         this.sortEntries = this.sortEntries.bind(this);
         this.parseDates = this.parseDates.bind(this);
         this.filterBlotterTable = this.filterBlotterTable.bind(this);
         this.handleInputCcy = this.handleInputCcy.bind(this);
-
         this.setState({ currencies: props.currencies })
+    }
 
+    componentDidUpdate(prevProps) {
+        if (prevProps.trans.length != this.props.trans.length) {
+            this.setState({ transactions: this.props.trans, registartions: this.props.trans })
+        }
     }
 
     handleInputCcy(e) {
@@ -142,7 +147,7 @@ class Table extends Component {
         let currentSelectionTable = this.state.registartions;
 
         //ccy input and date input exist
-        if (this.state.inputCcy !== "opt_none" && selectedDate.length !== 0) {
+        if (this.state.inputCcy !== "Choose..." && selectedDate.length !== 0) {
             const selectedPair = document.getElementById("inputCcy").value;
             currentSelectionTable = currentSelectionTable
                 .filter((i) => i.ccy_pair === selectedPair)
@@ -152,7 +157,7 @@ class Table extends Component {
                     toast: {
                         isShown: true,
                         toastTitle: "Not found",
-                        toastMessage: "There are no registrations available for selected filters. Please select another options.",
+                        toastMessage: "There are no registrations available for selected filters. Please select another options.1",
                         toastType: "fail"
                     }
                 });
@@ -164,10 +169,9 @@ class Table extends Component {
                     })
                 }, 2000)
             }
-
         }
         //ccy input exists but date input doesn`t
-        else if (this.state.inputCcy !== "opt_none" && selectedDate.length === 0) {
+        else if (this.state.inputCcy !== "Choose..." && selectedDate.length === 0) {
             const selectedPair = document.getElementById("inputCcy").value;
             currentSelectionTable = currentSelectionTable
                 .filter((i) => i.ccy_pair === selectedPair);
@@ -176,7 +180,7 @@ class Table extends Component {
                     toast: {
                         isShown: true,
                         toastTitle: "Not found",
-                        toastMessage: "There are no registrations available for selected filters. Please select another options.",
+                        toastMessage: "There are no registrations available for selected filters. Please select another options.2",
                         toastType: "fail"
                     }
                 });
@@ -188,10 +192,9 @@ class Table extends Component {
                     })
                 }, 2000)
             }
-
         }
         //date input exists but ccy input doesn`t
-        else if (this.state.inputCcy === "opt_none" && selectedDate.length !== 0) {
+        else if (this.state.inputCcy === "Choose..." && selectedDate.length > 0) {
             currentSelectionTable = currentSelectionTable.filter((i) =>
                 i.trans_date.startsWith(selectedDate)
             );
@@ -200,7 +203,7 @@ class Table extends Component {
                     toast: {
                         isShown: true,
                         toastTitle: "Not found",
-                        toastMessage: "There are no registrations available for selected filters. Please select another options.",
+                        toastMessage: "There are no registrations available for selected filters. Please select another options.3",
                         toastType: "fail"
                     }
                 });
@@ -212,6 +215,8 @@ class Table extends Component {
                     })
                 }, 2000)
             }
+        } else {
+            console.log("last case"); this.setState({ transactions: this.props.trans })
         }
         this.setState({ transactions: currentSelectionTable })
     }
@@ -239,7 +244,7 @@ class Table extends Component {
                 <div className="table-responsive">
                     <table id="blotter-table" className="table table-striped col-xs-7 table-condensed tabe-fixed">
                         <TableHead sortEntries={this.sortEntries} />
-                        <TableBody transactions={this.props.trans} />
+                        <TableBody transactions={this.state.transactions} />
                     </table>
                 </div>
             </section >

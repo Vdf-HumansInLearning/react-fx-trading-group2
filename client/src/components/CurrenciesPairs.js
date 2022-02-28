@@ -6,12 +6,13 @@ function CurrenciesPairs({ currencies, filterBlotterTable, handleInputCcy }) {
         <>
             <div className="input-group col mb-3">
                 <label className="input-group-text" htmlFor="inputCcy">CCY Pair</label>
-                <select className="form-select" id="inputCcy"
-                    onChange={() => { filterBlotterTable(); handleInputCcy() }}
-                    onClick={handleInputCcy}>
-                    <option defaultValue="opt_none">Choose..</option>
+                <select className="form-select" id="inputCcy" name="inputCcy"
+                    onChange={handleInputCcy}
+                    onClick={filterBlotterTable}
+                >
+                    <option value="Choose...">Choose..</option>
                     {currencies.map((pair) => (
-                        <option defaultValue={pair} id={pair} key={pair}>{pair}</option>
+                        <option value={pair} id={pair} key={pair}>{pair}</option>
                     ))}
                 </select>
             </div>
