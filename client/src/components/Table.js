@@ -37,6 +37,10 @@ class Table extends Component {
 
     }
 
+    handleInputCcy(e) {
+        this.setState({ inputCcy: e.target.value })
+    }
+
     sortEntries(property, sortType) {
         let filteredRegistrations = [];
         let currentSelectionTable = this.state.transactions;
@@ -129,10 +133,6 @@ class Table extends Component {
             firstDate: firstDate,
             secondDate: secondDate,
         };
-    }
-
-    handleInputCcy(e) {
-        this.setState({ inputCcy: e.target.value })
     }
 
     filterBlotterTable() {
@@ -239,7 +239,7 @@ class Table extends Component {
                 <div className="table-responsive">
                     <table id="blotter-table" className="table table-striped col-xs-7 table-condensed tabe-fixed">
                         <TableHead sortEntries={this.sortEntries} />
-                        <TableBody transactions={this.state.transactions} />
+                        <TableBody transactions={this.props.trans} />
                     </table>
                 </div>
             </section >

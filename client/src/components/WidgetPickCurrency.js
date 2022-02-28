@@ -9,10 +9,9 @@ const WidgetPickCurrency = ({
   confirmSelectionCurrency,
   handleMainCurrency,
   handleSecondCurrency,
+  currenciesAvailable
 }) => {
-  const { data: currenciesAvailable } = useFetch(
-    "http://localhost:8080/api/currencies"
-  );
+
 
   return (
     <div className="col" id={`pickCard${cardIdCounter}`}>

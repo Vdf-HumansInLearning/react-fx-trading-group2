@@ -14,6 +14,10 @@ function Dashboard() {
     `http://localhost:8080/api/currencies/pairs`
   );
 
+  const { data: currenciesAvailable } = useFetch(
+    "http://localhost:8080/api/currencies"
+  );
+
   const navigate = useNavigate();
   const [toast, setToast] = useState({
     isShown: false,
@@ -35,7 +39,6 @@ function Dashboard() {
       navigate("/login");
     }, 3000);
   };
-
 
   useEffect(() => {
     getTransactions();
@@ -68,7 +71,7 @@ function Dashboard() {
       <div id="app">
         <Navbar clearCookiesOnLogout={clearCookiesOnLogout} />
         <main className="container-fluid row mb-5">
-          <RatesView trans={trans} />
+          <RatesView trans={trans} currenciesAvailable={currenciesAvailable} />
           {/* {isPending && <div>Loading...</div>}
           {error && <div>{error}</div>} */}
           {trans.length > 0 && currencies && <Table trans={trans} currencies={currencies} />}

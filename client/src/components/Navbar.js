@@ -1,7 +1,8 @@
 import Cookies from "js-cookie";
 import React from "react";
 
-function Navbar({ clearCookiesOnLogout, Auth }) {
+function Navbar({ clearCookiesOnLogout, eventSourceList }) {
+  // if (!eventSourceList) {
   return (
     <>
       <nav className="navbar navbar-light bg-light mb-3">
@@ -19,7 +20,8 @@ function Navbar({ clearCookiesOnLogout, Auth }) {
           onClick={() => {
             clearCookiesOnLogout("username");
             Cookies.remove("username");
-          }}
+          }
+          }
         >
           Logout
         </button>
@@ -27,5 +29,13 @@ function Navbar({ clearCookiesOnLogout, Auth }) {
     </>
   );
 }
+// else {
+// for (let i = 0; i < eventSourceList.length; i++) {
+//   eventSourceList[i].eventSourceObj.close();
+//   eventSourceList.splice(i, 1)
+// }
+// return <></>
+//}
+//}
 
 export default Navbar;

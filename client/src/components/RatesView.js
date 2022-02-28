@@ -67,6 +67,7 @@ class RatesView extends Component {
             handleSecondCurrency={this.handleSecondCurrency}
             handleNotional={this.handleNotional}
             handleTenor={this.handleTenor}
+            currenciesAvailable={this.props.currenciesAvailable}
           />,
         ],
       });
@@ -346,6 +347,7 @@ class RatesView extends Component {
     }
   }
 
+
   sendDataTransactions(
     action,
     sendMainCurrency,
@@ -452,20 +454,6 @@ class RatesView extends Component {
             }, 2000);
           }
         })
-      // .then(
-      //   fetch("http://localhost:8080/api/transactions", {
-      //     method: "GET",
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //   }).then((res) =>
-      //     res.json().then((data) => {
-      //       this.setState({ trans: data })
-      //     })
-      //   ).catch((error) => {
-      //     console.log(error);
-      //   })
-      // )
     } else if (this.state.notional && this.state.tenor === "Choose...") {
       this.setState({
         toast: {
@@ -642,6 +630,7 @@ class RatesView extends Component {
     const { toast, cards } = this.state;
     return (
       <section className="col-sm-12 col-md-12 col-lg-6">
+        {/* <Navbar eventSourceList={this.state.eventSourceList} /> */}
         <Toast
           isShown={toast.isShown}
           toastTitle={toast.toastTitle}
