@@ -1,4 +1,5 @@
 import { Component } from "react";
+import { useNavigate } from "react-router-dom";
 import Table from "../components/Table";
 import Cookies from "js-cookie";
 import Navbar from "./../components/Navbar";
@@ -7,6 +8,7 @@ import WidgetAdd from "../components/WidgetAdd";
 import WidgetPickCurrency from "../components/WidgetPickCurrency";
 import WidgetMain from "../components/WidgetMain";
 import "../styles/style-index.css";
+
 let eventSource;
 
 class Dashboard extends Component {
@@ -69,7 +71,7 @@ class Dashboard extends Component {
       }
     });
     setTimeout(() => {
-      window.location.href("/login");
+      this.props.navigate("/login")
     }, 3000);
   };
 
@@ -692,7 +694,7 @@ class Dashboard extends Component {
   }
 
   render() {
-    const { toast, cards, trans, currencies } = this.state;
+    const { toast, cards, trans, currencies, eventSourceList } = this.state;
     return (
       <>
         <Toast
@@ -702,7 +704,7 @@ class Dashboard extends Component {
           toastType={toast.toastType}
         />
         <div id="app">
-          <Navbar clearCookiesOnLogout={this.clearCookiesOnLogout} />
+          <Navbar clearCookiesOnLogout={this.clearCookiesOnLogout} eventSourceList={eventSourceList} />
           <main className="container-fluid row mb-5">
             <section className="col-sm-12 col-md-12 col-lg-6">
               {/* <Navbar eventSourceList={this.state.eventSourceList} /> */}
@@ -730,4 +732,11 @@ class Dashboard extends Component {
   }
 }
 
-export default Dashboard;
+const route = (WrappedComponent) => (props) => {
+  const navigate = useNavigate();
+  return (
+    <WrappedComponent {...props} navigate={navigate} />
+  );
+};
+
+export default route(Dashboard);
