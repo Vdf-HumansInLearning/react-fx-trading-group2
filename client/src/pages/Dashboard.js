@@ -93,7 +93,6 @@ class Dashboard extends Component {
           trans: data[1],
           currenciesAvailable: data[2]
         })
-        console.log(this.state.trans)
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -640,16 +639,12 @@ class Dashboard extends Component {
 
     eventSource.onmessage = (e) => {
       let currencyObj = JSON.parse(e.data);
-      console.log(currencyObj);
-      //populate the itemstop
-
       let array = [...this.state.mainWidgetItems];
+      let arrayWidget = [...this.state.cards];
       let indexItem = array.findIndex(
         (item, index) =>
           this.state.mainWidgetItems[index].id === Number(currentCardId)
       );
-      let arrayWidget = [...this.state.cards];
-
       let initialSellRate = array[indexItem].sellRate;
       let initialBuyRate = array[indexItem].buyRate;
 
@@ -666,6 +661,16 @@ class Dashboard extends Component {
           arrayWidget[index].props.cardIdCounter == Number(currentCardId)
       );
 
+      let sellIcon = initialSellRate < currencyObj.sell ? "up" : "down";
+      let buyIcon = initialBuyRate < currencyObj.buy ? "up" : "down";
+
+      this.setState({
+        mainWidgetItems: array,
+        cards: arrayWidget,
+        iconSell: sellIcon,
+        iconBuy: buyIcon
+      });
+
       arrayWidget.splice(
         index1,
         1,
@@ -676,8 +681,8 @@ class Dashboard extends Component {
           item={this.state.mainWidgetItems[indexItem]}
           swapCurrencies={this.swapCurrencies}
           sendDataTransactions={this.sendDataTransactions}
-          iconSell={initialSellRate < currencyObj.sell ? "up" : "down"}
-          iconBuy={initialBuyRate < currencyObj.buy ? "up" : "down"}
+          iconSell={this.state.iconSell}
+          iconBuy={this.state.iconBuy}
           handleNotional={this.handleNotional}
           handleTenor={this.handleTenor}
         />
@@ -685,7 +690,7 @@ class Dashboard extends Component {
 
       this.setState({
         mainWidgetItems: array,
-        cards: arrayWidget,
+        cards: arrayWidget
       });
     };
   }

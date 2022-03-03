@@ -24,6 +24,7 @@ class Table extends Component {
                 toastType: "success",
             },
             inputCcy: "Choose...",
+            inputDate: "",
             transactions: props.trans,
             registartions: props.trans,
             currentSelectionTable: []
@@ -33,6 +34,7 @@ class Table extends Component {
         this.parseDates = this.parseDates.bind(this);
         this.filterBlotterTable = this.filterBlotterTable.bind(this);
         this.handleInputCcy = this.handleInputCcy.bind(this);
+        this.handleInputDate = this.handleInputDate.bind(this);
         this.setState({ currencies: props.currencies })
     }
 
@@ -43,9 +45,12 @@ class Table extends Component {
     }
 
     handleInputCcy(e) {
-        this.setState({ inputCcy: e.target.value })
+        this.setState({ inputCcy: e.target.value }, this.filterBlotterTable);
     }
 
+    handleInputDate(e) {
+        this.setState({ inputDate: e.target.value }, this.filterBlotterTable);
+    }
     sortEntries(property, sortType) {
         let filteredRegistrations = [];
         let currentSelectionTable = this.state.transactions;
@@ -141,14 +146,14 @@ class Table extends Component {
     }
 
     filterBlotterTable() {
-        let selectedDate = document.getElementById("inputDateFilter").value;
+        let selectedDate = this.state.inputDate;
         let dateArray = selectedDate.split("-").reverse();
         selectedDate = dateArray.join("/");
         let currentSelectionTable = this.state.registartions;
 
         //ccy input and date input exist
         if (this.state.inputCcy !== "Choose..." && selectedDate.length !== 0) {
-            const selectedPair = document.getElementById("inputCcy").value;
+            const selectedPair = this.state.inputCcy;
             currentSelectionTable = currentSelectionTable
                 .filter((i) => i.ccy_pair === selectedPair)
                 .filter((i) => i.trans_date.startsWith(selectedDate));
@@ -157,7 +162,7 @@ class Table extends Component {
                     toast: {
                         isShown: true,
                         toastTitle: "Not found",
-                        toastMessage: "There are no registrations available for selected filters. Please select another options.1",
+                        toastMessage: "There are no registrations available for selected filters. Please select another options.",
                         toastType: "fail"
                     }
                 });
@@ -172,7 +177,7 @@ class Table extends Component {
         }
         //ccy input exists but date input doesn`t
         else if (this.state.inputCcy !== "Choose..." && selectedDate.length === 0) {
-            const selectedPair = document.getElementById("inputCcy").value;
+            const selectedPair = this.state.inputCcy;
             currentSelectionTable = currentSelectionTable
                 .filter((i) => i.ccy_pair === selectedPair);
             if (currentSelectionTable.length === 0) {
@@ -180,7 +185,7 @@ class Table extends Component {
                     toast: {
                         isShown: true,
                         toastTitle: "Not found",
-                        toastMessage: "There are no registrations available for selected filters. Please select another options.2",
+                        toastMessage: "There are no registrations available for selected filters. Please select another options.",
                         toastType: "fail"
                     }
                 });
@@ -203,7 +208,7 @@ class Table extends Component {
                     toast: {
                         isShown: true,
                         toastTitle: "Not found",
-                        toastMessage: "There are no registrations available for selected filters. Please select another options.3",
+                        toastMessage: "There are no registrations available for selected filters. Please select another options.",
                         toastType: "fail"
                     }
                 });
@@ -237,7 +242,10 @@ class Table extends Component {
                     <div className="vertical-line"></div>
                     <div className="row">
                         {this.props.currencies && (
-                            <CurrenciesPairs currencies={this.props.currencies} filterBlotterTable={this.filterBlotterTable} handleInputCcy={this.handleInputCcy} />
+                            <CurrenciesPairs currencies={this.props.currencies}
+                                filterBlotterTable={this.filterBlotterTable}
+                                handleInputCcy={this.handleInputCcy}
+                                handleInputDate={this.handleInputDate} />
                         )}
                     </div>
                 </div>
