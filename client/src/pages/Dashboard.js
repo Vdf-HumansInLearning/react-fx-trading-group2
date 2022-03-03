@@ -56,6 +56,7 @@ class Dashboard extends Component {
     this.handleSecondCurrency = this.handleSecondCurrency.bind(this);
     this.handleNotional = this.handleNotional.bind(this);
     this.handleTenor = this.handleTenor.bind(this);
+    this.handleLogout = this.handleLogout.bind(this);
     this.clearCookiesOnLogout = this.clearCookiesOnLogout.bind(this);
     this.getData = this.getData.bind(this);
   }
@@ -196,6 +197,16 @@ class Dashboard extends Component {
 
   handleTenor(e) {
     this.setState({ tenor: e.target.value })
+  }
+
+  handleLogout() {
+    this.clearCookiesOnLogout("username");
+    Cookies.remove("username");
+    if (this.state.eventSourceList) {
+      for (let i = 0; i < this.state.eventSourceList.length; i++) {
+        this.stop(this.state.eventSourceList[i].id);
+      }
+    }
   }
 
   selectCurrency(cardId) {
@@ -704,7 +715,7 @@ class Dashboard extends Component {
           toastType={toast.toastType}
         />
         <div id="app">
-          <Navbar clearCookiesOnLogout={this.clearCookiesOnLogout} eventSourceList={eventSourceList} />
+          <Navbar handleLogout={this.handleLogout} />
           <main className="container-fluid row mb-5">
             <section className="col-sm-12 col-md-12 col-lg-6">
               {/* <Navbar eventSourceList={this.state.eventSourceList} /> */}
